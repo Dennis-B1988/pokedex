@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="../img/pokemon-icon.png" />
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/footer.css" />
     <script src="../js/includesHTML.js"></script>
@@ -10,11 +11,13 @@
     <title>Pokedex</title>
   </head>
   <body onload="init()">
+    <div w3-include-html="templates/header.html" class="header"></div>
+
     <div id="pokedex">
       <h1 id="pokemon_name">Name</h1>
     </div>
     <div class="info_container">
-      <img src="" alt="" id="pokemonImage" />
+      <img src="#" alt="" id="pokemonImage" />
     </div>
 
     <div w3-include-html="templates/footer.html" class="footer"></div>
