@@ -14,7 +14,7 @@ async function includeHTML() {
 
 function renderPokedexHTML(i, pokemonTypeColors) {
     return /*html*/ `
-        <div id="pokedex_${i}" class="pokedex" style="background-color: ${pokemonTypeColors[currentPokemon.types[0].type.name]};">
+        <div onclick="openBigPokedex(${i})" id="${currentPokemon.name}" class="pokedex" style="background-color: ${pokemonTypeColors[currentPokemon.types[0].type.name]};">
             <div class="pokedex_top">
                 <div class="title_card">
                     <span id="pokemon_name_${i}"></span>
@@ -28,11 +28,11 @@ function renderPokedexHTML(i, pokemonTypeColors) {
                         <div class="about">About</div>
                         <div class="about_info">
                             <div class="weight">
-                                <img class="info_icon" src="../img/pokemon-icon.png" alt="" />
+                                <img class="info_icon" src="../img/gewicht.png" alt="" />
                                 <span id="pokemon_weight_${i}"></span>
                             </div>
                             <div class="height">
-                                <img class="info_icon" src="../img/pokemon-icon.png" alt="" />
+                                <img class="info_icon" src="../img/lineal.png" alt="" />
                                 <span id="pokemon_height_${i}"></span>
                             </div>
                         </div>
@@ -46,10 +46,6 @@ function renderPokedexHTML(i, pokemonTypeColors) {
                             <span id="pokemon_type_one_${i}" class="type" style="background-color: ${pokemonTypeColors[currentPokemon.types[0].type.name]};"></span>
                             <span id="pokemon_type_two_${i}" class="type"></span>
                         </div>
-                        <!-- <div class="abilities">
-                            <span class="abilities_text">Abilities</span>
-                            <span id="ability"></span>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -63,6 +59,48 @@ function renderPokemonHTML(x) {
     `;
 }
 
-function renderBigPokemon(){
-    
+function renderBigPokedex(i, pokemonTypeColors){
+    return /*html*/ `
+        <div id="${currentPokemon.name}_big" class="pokedex_big" style="background-color: ${pokemonTypeColors[currentPokemon.types[0].type.name]};">
+            <div class="pokedex_top_big">
+                <div class="title_card_big">
+                    <span id="pokemon_name_big_${i}"></span>
+                    <span id="pokemon_id_big_${i}"></span>
+                </div>
+                <img id="pokemon_image_big_${i}" class="pokemon_image" src="#" alt="" />
+            </div>
+            <div class="info_container_big">
+                <!-- <div class="left_info_big">
+                    <div class="info">
+                        <div class="about">About</div>
+                        <div class="about_info">
+                            <div class="weight">
+                                <img class="info_icon" src="../img/gewicht.png" alt="" />
+                                <span id="pokemon_weight_big_${i}"></span>
+                            </div>
+                            <div class="height">
+                                <img class="info_icon" src="../img/lineal.png" alt="" />
+                                <span id="pokemon_height_big_${i}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="middle_line_big"></div>
+                <div class="right_info_big">
+                    <div class="info_big">
+                        <div class="types_big">
+                            <span class="types_text_big">Types</span>
+                            <span id="pokemon_type_one_big_${i}" class="type" style="background-color: ${pokemonTypeColors[currentPokemon.types[0].type.name]};"></span>
+                            <span id="pokemon_type_two_big_${i}" class="type"></span>
+                        </div>
+
+                    </div>
+                </div> -->
+
+                <div id="chart" style="height: 350px; width: 90%">
+                    <canvas id="pokemon_chart" class="pokemon_chart"></canvas>
+                </div>
+            </div>
+        </div>
+    `;
 }
