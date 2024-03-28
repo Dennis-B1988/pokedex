@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="../img/pokemon-icon.png" />
     <link rel="stylesheet" href="../css/style.css" />
-    <!-- <link rel="stylesheet" href="../css/footer.css" /> -->
     <script src="../js/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/includesHTML.js"></script>
@@ -14,17 +13,15 @@
     <title>Pokedex</title>
   </head>
   <body id="body" onload="init()">
-    <div w3-include-html="templates/header.html" class="header"></div>
+    <div w3-include-html="templates/header.html" id="header" class="header"></div>
 
     <section id="main" class="main">
       <div id="pokemon_search" class="pokemon_search"></div>
 
-      <div id="pokemon">
-        <div id="pokemon_container_1" class="pokemon_container"></div>
-      </div>
+      <div id="pokemon"></div>
 
       <div class="more_pokemon">
-        <div id="load_more_pokemon" class="load_more_pokemon" onclick="loadPokemon()">Load More</div>
+        <button id="load_more_pokemon" class="load_more_pokemon" onclick="loadNextPokemonBatch()">Load More</button>
       </div>
     </section>
 
@@ -35,7 +32,7 @@
         </div>
         <div class="placeholder"></div>
 
-        <div id="pokedex_big" class="pokedex_big_container" onclick="closeBigPokedex()"></div>
+        <div id="pokedex_big" class="pokedex_big_container"></div>
 
         <div class="picture_arrow arrow_right">
           <img class="big_forward" onclick="pokemonForward(pokemonBig)" src="../img/icons8-forward-100.png" alt="arrow forwards" />

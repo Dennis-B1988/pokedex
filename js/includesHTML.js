@@ -53,15 +53,9 @@ function renderPokedexHTML(i, pokemonTypeColors) {
     `;
 }
 
-function renderPokemonHTML(x) {
-    return /*html*/ `
-        <div id="pokemon_container_${x}" class="pokemon_container"></div>
-    `;
-}
-
 function renderBigPokedex(i, pokemonTypeColors){
     return /*html*/ `
-        <div  id="${currentPokemon.name}_big" class="pokedex_big" style="background-color: ${pokemonTypeColors[currentPokemon.types[0].type.name]};">
+        <div onclick="closeBigPokedex()" id="${currentPokemon.name}_big" class="pokedex_big" style="background-color: ${pokemonTypeColors[currentPokemon.types[0].type.name]};">
             <div class="pokedex_top_big">
                 <div class="title_card_big">
                     <span id="pokemon_name_big_${i}"></span>
@@ -74,7 +68,6 @@ function renderBigPokedex(i, pokemonTypeColors){
                     <span id="pokemon_type_one_big_${i}" class="type_big" style="background-color: ${pokemonTypeColors[currentPokemon.types[0].type.name]};"></span>
                     <span id="pokemon_type_two_big_${i}" class="type_big"></span>
                 </div>
-                <!-- <div class="ability">Abilities</div> -->
                 <div id="pokemon_abilities_big_${i}" class="pokemon_abilities_big">
                     <div class="ability_one ability">${currentPokemon.abilities[0].ability.name}</div>
                     <div id="ability_two_${i}" class="ability_two ability"></div>
@@ -84,5 +77,11 @@ function renderBigPokedex(i, pokemonTypeColors){
                 </div>
             </div>
         </div>
+    `;
+}
+
+function renderPokemonHTML(x) {
+    return /*html*/ `
+        <div id="pokemon_container_${x}" class="pokemon_container"></div>
     `;
 }
