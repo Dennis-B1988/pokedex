@@ -22,17 +22,17 @@ async function pokemonAPI(i){
 
 // Renders pokemon and new containers
 async function renderPokemon(){
-    if(pokemonId < 1026){
+    if(pokemonId <= 1025){
         document.getElementById('pokemon').innerHTML += renderPokemonHTML(pokemonContainer); // Seperates pokemon containers for every 36 pokemon
         await loadPokemon();
-        pokemonId += 36;
+        pokemonId += 24;
         pokemonContainer++;
-    } 
+    }
 }
 
-// Loads up to 1025 pokemon, removes load more button if the last pokemon is loaded
+// Loads up to 1025 pokemon, removes load more button after the last pokemon is loaded
 async function loadPokemon(){
-    for(let i = pokemonId; i <= pokemonId + 35; i++){
+    for(let i = pokemonId; i <= pokemonId + 23; i++){
         if(i <= 1025){
             await pokemonAPI(i);
             document.getElementById(`pokemon_container_${pokemonContainer}`).innerHTML += renderPokedexHTML(i, pokemonTypeColors);
@@ -48,7 +48,7 @@ async function loadNextPokemonBatch() {
     if (isLoading) return; // If already loading, do nothing
     isLoading = true;
     document.getElementById('load_more_pokemon').disabled = true;
-    loadPokemon();
+    renderPokemon();
     await new Promise(resolve => setTimeout(resolve, 2500)); // 2.5 seconds delay
     document.getElementById('load_more_pokemon').disabled = false;
     isLoading = false; 
@@ -62,9 +62,9 @@ async function openBigPokedex(i){
     await pokemonAPI(i);
     pokemonBig = i;
     document.getElementById('pokedex_big').innerHTML = renderBigPokedex(i, pokemonTypeColors);
+    evolvesFromPokemon(i);
     renderBigPokemonInfo(i);
-    pokemonBigAbilityTwo(i);
-    pokemonChart();
+    pokemonChart();   
 }
 
 // Closes the big pokedex and scrolls back to the last y-position
@@ -73,6 +73,19 @@ function closeBigPokedex(){
     document.getElementById('big_content').style.display = 'none';
     document.getElementById('pokedex_big').innerHTML = '';
 }
+
+// Closes the big pokedex when the background is clicked
+document.addEventListener('DOMContentLoaded', function () {
+    const popupBackground = document.getElementById('big_content_container');
+
+    closeBigPokedex();
+
+    popupBackground.addEventListener('click', function (event) {
+        if (event.target === popupBackground) {
+            closeBigPokedex();
+        }
+    });
+});
 
 // Loop through all images
 function pokemonForward(pokemonBig){
@@ -146,11 +159,10 @@ function renderPokemonInfo(i){
 function renderBigPokemonInfo(i){
     pokemonBigInfo(i);
     pokemonIdBigAddZero(i);
-    pokemonBigAbilityTwo(i);
     if (currentPokemon.types[1] !== undefined) {
         document.getElementById(`pokemon_type_two_big_${i}`).style.backgroundColor = pokemonTypeColors[currentPokemon.types[1].type.name];
         document.getElementById(`pokemon_type_two_big_${i}`).innerHTML = currentPokemon.types[1].type.name;
-        document.getElementById(`pokemon_type_two_big_${i}`).style.display = 'block';
+        document.getElementById(`pokemon_type_two_big_${i}`).style.display = 'flex';
     }
 }
 
@@ -193,10 +205,14 @@ function pokemonIdBigAddZero(i){
     }
 }
 
-// Checks if the pokemon has a second ability
-function pokemonBigAbilityTwo(i){
-    if(currentPokemon.abilities[1] !== undefined){
-        document.getElementById(`ability_two_${i}`).innerHTML = currentPokemon.abilities[1].ability.name;
+// Checks if the pokemon evolves from another
+async function evolvesFromPokemon(i){
+    let url = `https://pokeapi.co/api/v2/pokemon-species/${i}`;
+    let response = await fetch(url);
+    evolvesFrom = await response.json();
+    if(evolvesFrom.evolves_from_species !== null  && window.innerHeight > 667){
+        document.getElementById('evolves_from_text').innerHTML = 'Evolves from: ';
+        document.getElementById('evolves_from_pokemon').innerHTML = evolvesFrom.evolves_from_species.name;
     }
 }
 

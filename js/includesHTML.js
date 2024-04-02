@@ -55,24 +55,25 @@ function renderPokedexHTML(i, pokemonTypeColors) {
 
 function renderBigPokedex(i, pokemonTypeColors){
     return /*html*/ `
-        <div onclick="closeBigPokedex()" id="${currentPokemon.name}_big" class="pokedex_big" style="background-color: ${pokemonTypeColors[currentPokemon.types[0].type.name]};">
+        <div  id="${currentPokemon.name}_big" class="pokedex_big" style="background-color: ${pokemonTypeColors[currentPokemon.types[0].type.name]};">
             <div class="pokedex_top_big">
                 <div class="title_card_big">
                     <span id="pokemon_name_big_${i}"></span>
                     <span id="pokemon_id_big_${i}"></span>
                 </div>
-                <img id="pokemon_image_big_${i}" class="pokemon_image_big" src="#" alt="" /> 
+                
             </div>
+            <img id="pokemon_image_big_${i}" class="pokemon_image_big" src="#" alt="" /> 
             <div class="info_container_big">
                 <div class="types_big">
                     <span id="pokemon_type_one_big_${i}" class="type_big" style="background-color: ${pokemonTypeColors[currentPokemon.types[0].type.name]};"></span>
                     <span id="pokemon_type_two_big_${i}" class="type_big"></span>
                 </div>
-                <div id="pokemon_abilities_big_${i}" class="pokemon_abilities_big">
-                    <div class="ability_one ability">${currentPokemon.abilities[0].ability.name}</div>
-                    <div id="ability_two_${i}" class="ability_two ability"></div>
+                <div class="evolves_from">
+                    <span id="evolves_from_text" class="evolves_from_text"></span>
+                    <span id="evolves_from_pokemon" class="evolves_from_pokemon"></span>
                 </div>
-                <div id="chart">
+                <div id="chart" class="chart">
                     <canvas id="pokemon_chart" class="pokemon_chart" ></canvas>
                 </div>
             </div>
@@ -80,8 +81,8 @@ function renderBigPokedex(i, pokemonTypeColors){
     `;
 }
 
-function renderPokemonHTML(x) {
+function renderPokemonHTML(pokemonContainer) {
     return /*html*/ `
-        <div id="pokemon_container_${x}" class="pokemon_container"></div>
+        <div id="pokemon_container_${pokemonContainer}" class="pokemon_container"></div>
     `;
 }
