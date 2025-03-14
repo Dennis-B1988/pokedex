@@ -1,0 +1,45 @@
+@for (pokemon of pokemonSaved; track pokemon.id) {
+  @if ($index < app.pokemonShown) {
+    <div
+      class="pokemon-card"
+      [id]="'pokemonCardId-' + ($index + 1)"
+      (click)="openBigPokedex(pokemon)"
+      [style]="{
+        boxShadow:
+          '0px 0px 10px 10px' +
+          getPokemonTypeColor(pokemon.details?.types[0].type.name),
+      }"
+    >
+      <div class="title-card">
+        <span class="pokemon-name">
+          {{ pokemon.name }}
+        </span>
+        <span class="pokemon-id">
+          {{ formatPokemonId(pokemon.id) }}
+        </span>
+      </div>
+      <img
+        class="pokemon-image"
+        [src]="
+          pokemon.details?.sprites?.other['official-artwork'].front_default
+        "
+        alt=""
+      />
+
+      <div class="info-container">
+        <div class="info-middle">
+          <div class="types">
+            @for (type of pokemon?.details?.types; track $index) {
+              <span
+                class="type"
+                [style.color]="getPokemonTypeColor(type?.type?.name)"
+              >
+                {{ type?.type?.name }}
+              </span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+}
