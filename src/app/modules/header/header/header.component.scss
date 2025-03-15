@@ -1,4 +1,4 @@
-div {
+header {
   height: 100px;
   display: flex;
   flex-direction: row;
@@ -6,18 +6,3 @@ div {
   justify-content: center;
   gap: 20px;
 }
-
-// mat-select {
-//   width: 100px;
-// }
-
-// select {
-//   width: 100px;
-//   height: 30px;
-//   padding: 5px;
-//   cursor: pointer;
-
-//   option:hover {
-//     cursor: pointer;
-//   }
-// }

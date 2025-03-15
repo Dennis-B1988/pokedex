@@ -1,10 +1,32 @@
 <div class="pokemon-card">
-  <output>{{ pokemon()?.id }}</output>
-  <output>{{ pokemon()?.name }}</output>
-  <img
-    src="{{ pokemon()?.sprites?.other?.['official-artwork']?.front_default }}"
-    alt=""
-  />
-  <!-- <output>{{ pokemon()?.weight }}</output>
-  <output>{{ pokemon()?.height }}</output> -->
+  <header class="pokemon-header">
+    <span class="pokemon-id">#{{ pokemon()?.id || "N/A" }}</span>
+  </header>
+
+  <h3
+    class="pokemon-name"
+    matTooltip="{{ pokemon()?.name }}"
+    matTooltipPosition="above"
+  >
+    {{ pokemonName(pokemon()?.name || "Unknown Pokémon") }}
+  </h3>
+
+  <div class="pokemon-image-container">
+    <img
+      src="{{ pokemon()?.sprites?.other?.['official-artwork']?.front_default }}"
+      [alt]="'Official artwork of ' + (pokemon()?.name || 'Unknown Pokémon')"
+      class="pokemon-image"
+    />
+  </div>
+
+  <footer class="pokemon-types">
+    <span class="pokemon-type" [class]="pokemon()?.types?.[0]?.type?.name">{{
+      pokemon()?.types?.[0]?.type?.name || ""
+    }}</span>
+    @if (pokemon()?.types?.[1]) {
+      <span class="pokemon-type" [class]="pokemon()?.types?.[1]?.type?.name">{{
+        pokemon()?.types?.[1]?.type?.name
+      }}</span>
+    }
+  </footer>
 </div>

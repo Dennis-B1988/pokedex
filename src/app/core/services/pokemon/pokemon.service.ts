@@ -97,4 +97,13 @@ export class PokemonService {
     const regionData = this.regionRanges[region];
     this.loadPokemons(regionData.start, regionData.end);
   }
+
+  formatPokemonName(name: string): string {
+    if (!name) return "";
+
+    return name
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join("-");
+  }
 }

@@ -15,12 +15,12 @@ export class HeaderComponent {
   private pokemonService = inject(PokemonService);
   private router = inject(Router);
 
+  currentRegion = this.pokemonService.currentRegion;
   isLoading = this.pokemonService.isLoading;
 
   regions: RegionKey[] = Object.keys(
     this.pokemonService.regionRanges,
   ) as RegionKey[];
-  currentRegion = this.pokemonService.currentRegion;
 
   constructor() {
     console.log(this.regions);
