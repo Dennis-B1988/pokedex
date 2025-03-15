@@ -1,11 +1,13 @@
 import { Component, inject } from "@angular/core";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatSelectModule } from "@angular/material/select";
 import { Router } from "@angular/router";
 import { RegionKey } from "../../../core/models/pokemon-details.model";
 import { PokemonService } from "../../../core/services/pokemon/pokemon.service";
 
 @Component({
   selector: "app-header",
-  imports: [],
+  imports: [MatSelectModule, MatFormFieldModule],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.scss",
 })
@@ -20,8 +22,11 @@ export class HeaderComponent {
   ) as RegionKey[];
   currentRegion = this.pokemonService.currentRegion;
 
+  constructor() {
+    console.log(this.regions);
+  }
+
   selectRegion(region: RegionKey): void {
-    // Navigate to the selected region
     this.router.navigate(["/region", region]);
   }
 }

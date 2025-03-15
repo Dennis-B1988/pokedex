@@ -1,7 +1,14 @@
 import { HttpClient } from "@angular/common/http";
 import { DestroyRef, inject, Injectable, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { finalize, forkJoin, Observable, switchMap } from "rxjs";
+import {
+  catchError,
+  finalize,
+  forkJoin,
+  Observable,
+  of,
+  switchMap,
+} from "rxjs";
 import { environment } from "../../../../environment/environment";
 import {
   Pokemon,
@@ -49,7 +56,12 @@ export class PokemonService {
     this.isLoading.set(true);
 
     const pokemonRequests = Array.from({ length: end - start + 1 }, (_, i) =>
-      this.fetchPokemon(start + i + 1),
+      this.fetchPokemon(start + i + 1).pipe(
+        catchError((error) => {
+          console.log(error);
+          return of({} as Pokemon);
+        }),
+      ),
     );
 
     forkJoin(pokemonRequests)
