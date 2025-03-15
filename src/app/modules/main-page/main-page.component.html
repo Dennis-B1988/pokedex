@@ -1,11 +1,7 @@
 <main>
-  @for (pokemon of pokemons(); track pokemon.id) {
-    <div>
-      <output>{{ pokemon.name }}</output>
-      <output>{{ pokemon.weight }}</output>
-      <output>{{ pokemon.height }}</output>
-    </div>
-  }
-
   <button (click)="loadMorePokemons()">Load loadMorePokemons</button>
+
+  @for (pokemon of pokemons(); track pokemon.id) {
+    <app-pokemon-cards [pokemon]="pokemon"></app-pokemon-cards>
+  }
 </main>

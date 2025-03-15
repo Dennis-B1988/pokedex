@@ -15,12 +15,23 @@ export class PokemonService {
   start = signal<number>(0);
   limit: number = 10;
 
+  isLoading = signal<boolean>(true);
+
   constructor() {
     // setTimeout(() => {
-    this.fetchPokemons().subscribe((pokemons) => {
-      this.pokemons.set(pokemons);
-      console.log(this.pokemons());
-      console.log(this.start());
+    this.fetchPokemons().subscribe({
+      next: (pokemons) => {
+        this.pokemons.set(pokemons);
+      },
+      error: (error) => {
+        console.log(error);
+        this.isLoading.set(false);
+      },
+      complete: () => {
+        this.isLoading.set(false);
+        console.log(this.pokemons());
+        console.log(this.start());
+      },
     });
     // }, 1000);
   }
@@ -42,9 +53,18 @@ export class PokemonService {
   }
 
   loadMorePokemons() {
-    this.fetchPokemons().subscribe((newPokemons) => {
-      this.pokemons.update((pokemons) => [...pokemons, ...newPokemons]);
+    this.isLoading.set(true);
+    this.fetchPokemons().subscribe({
+      next: (newPokemons) => {
+        this.pokemons.update((pokemons) => [...pokemons, ...newPokemons]);
+      },
+      error: (error) => {
+        console.log(error);
+        this.isLoading.set(false);
+      },
+      complete: () => {
+        this.isLoading.set(false);
+      },
     });
-    console.log(this.start());
   }
 }
