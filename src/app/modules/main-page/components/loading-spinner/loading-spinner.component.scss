@@ -1,0 +1,48 @@
+.loading-spinner {
+  position: relative;
+  height: 200px;
+  width: 200px;
+  background: linear-gradient(to bottom, rgb(254, 0, 1) 50%, white 50%);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 8px black,
+    inset 0 0 0 10px white,
+    inset 0 0 0 12px black;
+  animation: spin 1s linear infinite;
+
+  &::before {
+    content: "";
+    position: absolute;
+    height: 16px;
+    width: 200px;
+    background: black;
+    top: 100px;
+    transform: translatey(-50%);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    height: 76px;
+    width: 76px;
+    border-radius: 50%;
+    background: white;
+    top: 100px;
+    left: 100px;
+    transform: translate(-50%, -50%);
+    box-shadow:
+      inset 0 0 0 8px black,
+      inset 0 0 0 10px white,
+      inset 0 0 0 12px black;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

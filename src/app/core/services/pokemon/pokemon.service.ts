@@ -1,8 +1,13 @@
 import { HttpClient } from "@angular/common/http";
 import { DestroyRef, inject, Injectable, signal } from "@angular/core";
-import { forkJoin, Observable, switchMap } from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { finalize, forkJoin, Observable, switchMap } from "rxjs";
 import { environment } from "../../../../environment/environment";
-import { Pokemon, PokemonDetails } from "../../models/pokemon-details.model";
+import {
+  Pokemon,
+  PokemonDetails,
+  RegionKey,
+} from "../../models/pokemon-details.model";
 
 @Injectable({
   providedIn: "root",
@@ -14,7 +19,20 @@ export class PokemonService {
 
   private pokemonCache: Record<string, Pokemon[]> = {};
   pokemons = signal<Pokemon[]>([]);
-  isLoading = signal<boolean>(true);
+  isLoading = signal<boolean>(false);
+
+  currentRegion = signal<RegionKey>("kanto");
+
+  regionRanges = {
+    kanto: { start: 0, end: 150, title: "Kanto Region" },
+    johto: { start: 151, end: 250, title: "Johto Region" },
+    hoenn: { start: 251, end: 385, title: "Hoenn Region" },
+    sinnoh: { start: 386, end: 492, title: "Sinnoh Region" },
+    unova: { start: 493, end: 648, title: "Unova Region" },
+    kalos: { start: 649, end: 720, title: "Kalos Region" },
+    alola: { start: 721, end: 808, title: "Alola Region" },
+    galar: { start: 809, end: 897, title: "Galar Region" },
+  };
 
   fetchPokemon(id: number): Observable<Pokemon> {
     return this.http.get<Pokemon>(`${this.pokeAPI}/${id}`);
@@ -34,19 +52,37 @@ export class PokemonService {
       this.fetchPokemon(start + i + 1),
     );
 
-    const subscription = forkJoin(pokemonRequests).subscribe({
-      next: (pokemonData) => {
-        this.pokemonCache[cacheKey] = pokemonData;
-        this.pokemons.set(pokemonData);
-      },
-      error: (error) => {
-        console.log(error);
-      },
-      complete: () => {
-        this.isLoading.set(false);
-      },
-    });
+    forkJoin(pokemonRequests)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.isLoading.set(false)),
+      )
+      .subscribe({
+        next: (pokemonData) => {
+          const validPokemon = pokemonData.filter(
+            (p) => Object.keys(p).length > 0,
+          );
+          this.pokemonCache[cacheKey] = validPokemon;
+          this.pokemons.set(pokemonData);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+        complete: () => {
+          this.isLoading.set(false);
+        },
+      });
+  }
 
-    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  // Add methods to check if a region is valid
+  isValidRegion(region: string): region is RegionKey {
+    return Object.keys(this.regionRanges).includes(region);
+  }
+
+  // Method to change region
+  changeRegion(region: RegionKey): void {
+    this.currentRegion.set(region);
+    const regionData = this.regionRanges[region];
+    this.loadPokemons(regionData.start, regionData.end);
   }
 }

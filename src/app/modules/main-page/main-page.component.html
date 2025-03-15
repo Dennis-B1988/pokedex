@@ -1,4 +1,8 @@
 <main>
-  <router-outlet />
+  @if (isLoading()) {
+    <app-loading-spinner></app-loading-spinner>
+  } @else {
+    <router-outlet />
+  }
 </main>
 <!-- <button (click)="loadMorePokemons()">Load Pokemons</button> -->

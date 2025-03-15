@@ -17,3 +17,19 @@ export interface Pokemon {
 export interface PokemonDetails {}
 
 export interface PokemonEvolution {}
+
+export interface RegionData {
+  start: number;
+  end: number;
+  title: string;
+}
+
+export type RegionKey =
+  | "kanto"
+  | "johto"
+  | "hoenn"
+  | "sinnoh"
+  | "unova"
+  | "kalos"
+  | "alola"
+  | "galar";

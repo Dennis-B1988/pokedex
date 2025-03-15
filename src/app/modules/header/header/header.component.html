@@ -1,4 +1,50 @@
-<p>
-  header works!
-  <button (click)="changeRegion()">Change Region</button>
-</p>
+<div>
+  <button
+    (click)="selectRegion('kanto')"
+    [disabled]="currentRegion() === 'kanto' || isLoading()"
+  >
+    Kanto
+  </button>
+  <button
+    (click)="selectRegion('johto')"
+    [disabled]="currentRegion() === 'johto' || isLoading()"
+  >
+    Johto
+  </button>
+  <button
+    (click)="selectRegion('hoenn')"
+    [disabled]="currentRegion() === 'hoenn' || isLoading()"
+  >
+    Hoenn
+  </button>
+  <button
+    (click)="selectRegion('sinnoh')"
+    [disabled]="currentRegion() === 'sinnoh' || isLoading()"
+  >
+    Sinnoh
+  </button>
+  <button
+    (click)="selectRegion('unova')"
+    [disabled]="currentRegion() === 'unova' || isLoading()"
+  >
+    Unova
+  </button>
+  <button
+    (click)="selectRegion('kalos')"
+    [disabled]="currentRegion() === 'kalos' || isLoading()"
+  >
+    Kalos
+  </button>
+  <button
+    (click)="selectRegion('alola')"
+    [disabled]="currentRegion() === 'alola' || isLoading()"
+  >
+    Alola
+  </button>
+  <button
+    (click)="selectRegion('galar')"
+    [disabled]="currentRegion() === 'galar' || isLoading()"
+  >
+    Galar
+  </button>
+</div>
