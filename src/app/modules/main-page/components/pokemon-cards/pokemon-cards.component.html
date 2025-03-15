@@ -1,14 +1,10 @@
-<div class="pokemon-card">
+<div class="pokemon-card" [style.boxShadow]="getBoxShadowStyle()">
   <header class="pokemon-header">
     <span class="pokemon-id">#{{ pokemon()?.id || "N/A" }}</span>
   </header>
 
-  <h3
-    class="pokemon-name"
-    matTooltip="{{ pokemon()?.name }}"
-    matTooltipPosition="above"
-  >
-    {{ pokemonName(pokemon()?.name || "Unknown Pokémon") }}
+  <h3 class="pokemon-name">
+    {{ pokemon()?.name || "Unknown Pokémon" }}
   </h3>
 
   <div class="pokemon-image-container">
@@ -20,13 +16,21 @@
   </div>
 
   <footer class="pokemon-types">
-    <span class="pokemon-type" [class]="pokemon()?.types?.[0]?.type?.name">{{
-      pokemon()?.types?.[0]?.type?.name || ""
-    }}</span>
+    <img
+      matTooltip="{{ pokemon()?.types?.[0]?.type?.name }}"
+      matTooltipPosition="above"
+      class="pokemon-type"
+      [class]="pokemon()?.types?.[0]?.type?.name"
+      [src]="'assets/img/' + pokemon()?.types?.[0]?.type?.name + '.svg'"
+    />
     @if (pokemon()?.types?.[1]) {
-      <span class="pokemon-type" [class]="pokemon()?.types?.[1]?.type?.name">{{
-        pokemon()?.types?.[1]?.type?.name
-      }}</span>
+      <img
+        matTooltip="{{ pokemon()?.types?.[1]?.type?.name }}"
+        matTooltipPosition="above"
+        class="pokemon-type"
+        [class]="pokemon()?.types?.[1]?.type?.name"
+        [src]="'assets/img/' + pokemon()?.types?.[1]?.type?.name + '.svg'"
+      />
     }
   </footer>
 </div>

@@ -13,6 +13,7 @@ import { environment } from "../../../../environment/environment";
 import {
   Pokemon,
   PokemonDetails,
+  pokemonTypeColors,
   RegionKey,
 } from "../../models/pokemon-details.model";
 
@@ -98,12 +99,20 @@ export class PokemonService {
     this.loadPokemons(regionData.start, regionData.end);
   }
 
-  formatPokemonName(name: string): string {
-    if (!name) return "";
+  // formatPokemonName(name: string): string {
+  //   if (!name) return "";
 
-    return name
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join("-");
+  //   return name
+  //     .split("-")
+  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+  //     .join("-");
+  // }
+
+  getPokemonTypeColors(color: string): string {
+    if (!color) return "";
+    const baseColor =
+      pokemonTypeColors[color as keyof typeof pokemonTypeColors] || "";
+
+    return baseColor ? `#${baseColor}cc` : "";
   }
 }
