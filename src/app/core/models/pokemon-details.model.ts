@@ -1,6 +1,10 @@
 export interface Pokemon {
   id: number;
   name: string;
+  weight: number;
+  height: number;
+  types: string[];
+  abilities: string[];
   sprites: {
     other: {
       "official-artwork": {
@@ -10,9 +14,6 @@ export interface Pokemon {
   };
 }
 
-export interface PokemonDetails {
-  weight: number;
-  height: number;
-  types: string[];
-  abilities: string[];
-}
+export interface PokemonDetails {}
+
+export interface PokemonEvolution {}

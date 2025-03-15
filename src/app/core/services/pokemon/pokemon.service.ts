@@ -12,62 +12,41 @@ export class PokemonService {
   private http = inject(HttpClient);
   private destroyRef = inject(DestroyRef);
 
+  private pokemonCache: Record<string, Pokemon[]> = {};
   pokemons = signal<Pokemon[]>([]);
-  start = signal<number>(0);
-  limit: number = 50;
-
   isLoading = signal<boolean>(true);
 
-  constructor() {
-    const subscripe = this.fetchPokemons(0, 151).subscribe({
-      next: (pokemons) => {
-        this.pokemons.set(pokemons);
-      },
-      error: (error) => {
-        console.log(error);
-        this.isLoading.set(false);
-      },
-      complete: () => {
-        this.isLoading.set(false);
-        console.log(this.pokemons());
-        console.log(this.start());
-      },
-    });
-
-    this.destroyRef.onDestroy(() => {
-      subscripe.unsubscribe();
-    });
+  fetchPokemon(id: number): Observable<Pokemon> {
+    return this.http.get<Pokemon>(`${this.pokeAPI}/${id}`);
   }
 
-  fetchPokemons(start: number, limit: number): Observable<Pokemon[]> {
-    return this.http
-      .get<{
-        results: { name: string; url: string }[];
-      }>(`${this.pokeAPI}?offset=${start}&limit=${limit}`)
-      .pipe(
-        switchMap((response) => {
-          const pokemonRequests = response.results.map((pokemon) =>
-            this.http.get<Pokemon>(pokemon.url),
-          );
-          this.start.set(this.start() + this.limit);
-          return forkJoin(pokemonRequests);
-        }),
-      );
-  }
+  loadPokemons(start: number, end: number): void {
+    const cacheKey = `${start}-${end}`;
 
-  loadMorePokemons(start: number, limit: number): void {
+    if (this.pokemonCache[cacheKey]) {
+      this.pokemons.set(this.pokemonCache[cacheKey]);
+      return;
+    }
+
     this.isLoading.set(true);
-    this.fetchPokemons(limit, start).subscribe({
-      next: (newPokemons) => {
-        this.pokemons.update((pokemons) => [...pokemons, ...newPokemons]);
+
+    const pokemonRequests = Array.from({ length: end - start + 1 }, (_, i) =>
+      this.fetchPokemon(start + i + 1),
+    );
+
+    const subscription = forkJoin(pokemonRequests).subscribe({
+      next: (pokemonData) => {
+        this.pokemonCache[cacheKey] = pokemonData;
+        this.pokemons.set(pokemonData);
       },
       error: (error) => {
         console.log(error);
-        this.isLoading.set(false);
       },
       complete: () => {
         this.isLoading.set(false);
       },
     });
+
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
 }
