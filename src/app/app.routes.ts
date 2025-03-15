@@ -5,5 +5,19 @@ export const routes: Routes = [
   {
     path: "",
     component: MainPageComponent,
+    children: [
+      {
+        path: "",
+        redirectTo: "region/kanto",
+        pathMatch: "full",
+      },
+      {
+        path: "region/:region",
+        loadComponent: () =>
+          import(
+            "./modules/main-page/components/pokemon-page/pokemon-page.component"
+          ).then((m) => m.PokemonPageComponent),
+      },
+    ],
   },
 ];

@@ -1,10 +1,10 @@
 import { Component, inject } from "@angular/core";
+import { RouterOutlet } from "@angular/router";
 import { PokemonService } from "../../core/services/pokemon/pokemon.service";
-import { PokemonCardsComponent } from "./components/pokemon-cards/pokemon-cards.component";
 
 @Component({
   selector: "app-main-page",
-  imports: [PokemonCardsComponent],
+  imports: [RouterOutlet],
   templateUrl: "./main-page.component.html",
   styleUrl: "./main-page.component.scss",
 })
@@ -20,7 +20,7 @@ export class MainPageComponent {
   }
 
   loadMorePokemons() {
-    this.pokemonService.loadMorePokemons();
+    // this.pokemonService.loadMorePokemons();
     console.log(this.pokemons());
     // setTimeout(() => {
     console.log(this.pokemonService.isLoading());

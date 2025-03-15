@@ -1,7 +1,4 @@
 <main>
-  <button (click)="loadMorePokemons()">Load loadMorePokemons</button>
-
-  @for (pokemon of pokemons(); track pokemon.id) {
-    <app-pokemon-cards [pokemon]="pokemon"></app-pokemon-cards>
-  }
+  <router-outlet />
 </main>
+<!-- <button (click)="loadMorePokemons()">Load Pokemons</button> -->

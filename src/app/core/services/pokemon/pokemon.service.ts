@@ -1,8 +1,8 @@
 import { HttpClient } from "@angular/common/http";
-import { inject, Injectable, signal } from "@angular/core";
-import { forkJoin, switchMap } from "rxjs";
+import { DestroyRef, inject, Injectable, signal } from "@angular/core";
+import { forkJoin, Observable, switchMap } from "rxjs";
 import { environment } from "../../../../environment/environment";
-import { PokemonDetails } from "../../models/pokemon-details.model";
+import { Pokemon, PokemonDetails } from "../../models/pokemon-details.model";
 
 @Injectable({
   providedIn: "root",
@@ -10,16 +10,16 @@ import { PokemonDetails } from "../../models/pokemon-details.model";
 export class PokemonService {
   private pokeAPI = environment.pokemonURL;
   private http = inject(HttpClient);
+  private destroyRef = inject(DestroyRef);
 
-  pokemons = signal<PokemonDetails[]>([]);
+  pokemons = signal<Pokemon[]>([]);
   start = signal<number>(0);
-  limit: number = 10;
+  limit: number = 50;
 
   isLoading = signal<boolean>(true);
 
   constructor() {
-    // setTimeout(() => {
-    this.fetchPokemons().subscribe({
+    const subscripe = this.fetchPokemons(0, 151).subscribe({
       next: (pokemons) => {
         this.pokemons.set(pokemons);
       },
@@ -33,28 +33,31 @@ export class PokemonService {
         console.log(this.start());
       },
     });
-    // }, 1000);
+
+    this.destroyRef.onDestroy(() => {
+      subscripe.unsubscribe();
+    });
   }
 
-  fetchPokemons() {
+  fetchPokemons(start: number, limit: number): Observable<Pokemon[]> {
     return this.http
       .get<{
         results: { name: string; url: string }[];
-      }>(`${this.pokeAPI}?limit=${this.limit}&offset=${this.start()}`)
+      }>(`${this.pokeAPI}?offset=${start}&limit=${limit}`)
       .pipe(
         switchMap((response) => {
-          const detailsRequests = response.results.map((pokemon) =>
-            this.http.get<PokemonDetails>(pokemon.url),
+          const pokemonRequests = response.results.map((pokemon) =>
+            this.http.get<Pokemon>(pokemon.url),
           );
           this.start.set(this.start() + this.limit);
-          return forkJoin(detailsRequests);
+          return forkJoin(pokemonRequests);
         }),
       );
   }
 
-  loadMorePokemons() {
+  loadMorePokemons(start: number, limit: number): void {
     this.isLoading.set(true);
-    this.fetchPokemons().subscribe({
+    this.fetchPokemons(limit, start).subscribe({
       next: (newPokemons) => {
         this.pokemons.update((pokemons) => [...pokemons, ...newPokemons]);
       },
