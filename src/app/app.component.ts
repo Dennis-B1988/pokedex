@@ -18,9 +18,9 @@ export class AppComponent {
   onScroll(): void {
     const scrollContainer = this.cardContainer.nativeElement;
     const scrollTop = scrollContainer.scrollTop;
-    const shouldLoadMore =
-      scrollContainer.scrollTop + scrollContainer.clientHeight >=
-      scrollContainer.scrollHeight;
+    // const shouldLoadMore =
+    //   scrollContainer.scrollTop + scrollContainer.clientHeight >=
+    //   scrollContainer.scrollHeight;
 
     this.showScrollToTop = scrollTop > 200;
 

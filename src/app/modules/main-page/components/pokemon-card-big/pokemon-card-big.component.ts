@@ -13,10 +13,11 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { catchError, forkJoin, map, Observable, of, switchMap } from "rxjs";
 import { PokemonService } from "../../../../core/services/pokemon/pokemon.service";
+import { LoadingSpinnerComponent } from "../loading-spinner/loading-spinner.component";
 
 @Component({
   selector: "app-pokemon-card-big",
-  imports: [],
+  imports: [LoadingSpinnerComponent],
   templateUrl: "./pokemon-card-big.component.html",
   styleUrl: "./pokemon-card-big.component.scss",
 })

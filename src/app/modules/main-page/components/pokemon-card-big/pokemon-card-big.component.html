@@ -1,79 +1,86 @@
-<!-- detailed-pokemon.component.html -->
 <div class="detailed-pokemon-overlay" (click)="$event.stopPropagation()">
-  <div class="detailed-pokemon-card">
+  <div class="detailed-pokemon-card-container">
     @if (isLoading) {
-      <div class="loading">Loading...</div>
+      <div class="loading">
+        <app-loading-spinner></app-loading-spinner>
+      </div>
     } @else if (error) {
       <div class="error">{{ error }}</div>
     } @else {
-      <header class="pokemon-header">
-        <span class="pokemon-id">#{{ pokemon?.id }}</span>
-        <h2 class="pokemon-name">{{ pokemon?.name }}</h2>
-        <button class="close-button" (click)="closeDetail.emit()">×</button>
-      </header>
+      <div class="detailed-pokemon-card">
+        <header class="pokemon-header">
+          <span class="pokemon-id">#{{ pokemon?.id }}</span>
+          <h2 class="pokemon-name">{{ pokemon?.name }}</h2>
+          <button class="close-button" (click)="closeDetail.emit()">×</button>
+        </header>
 
-      <div class="pokemon-content">
-        <div class="pokemon-main">
-          <img
-            [src]="pokemon?.sprites?.other?.['official-artwork']?.front_default"
-            [alt]="'Official artwork of ' + pokemon?.name"
-            class="pokemon-image"
-          />
+        <div class="pokemon-content">
+          <div class="pokemon-main">
+            <img
+              [src]="
+                pokemon?.sprites?.other?.['official-artwork']?.front_default
+              "
+              [alt]="'Official artwork of ' + pokemon?.name"
+              class="pokemon-image"
+            />
 
-          <div class="pokemon-info">
-            <div class="pokemon-types">
-              @for (type of pokemon?.types; track type.slot) {
-                <span
-                  class="type-badge"
-                  [style.backgroundColor]="getPokemonTypeColor(type.type.name)"
-                >
-                  {{ type.type.name }}
-                </span>
-              }
-            </div>
+            <div class="pokemon-info">
+              <div class="pokemon-types">
+                @for (type of pokemon?.types; track type.slot) {
+                  <span
+                    class="type-badge"
+                    [style.backgroundColor]="
+                      getPokemonTypeColor(type.type.name)
+                    "
+                  >
+                    {{ type.type.name }}
+                  </span>
+                }
+              </div>
 
-            <div class="pokemon-stats">
-              <h3>Base Stats</h3>
-              @for (stat of pokemon?.stats; track stat.stat.name) {
-                <div class="stat-row">
-                  <span class="stat-name">{{ stat.stat.name }}</span>
-                  <div class="stat-bar-container">
-                    <div
-                      class="stat-bar"
-                      [style.width.%]="(stat.base_stat / 255) * 100"
-                      [style.backgroundColor]="
-                        getPokemonTypeColor(pokemon?.types[0]?.type?.name)
-                      "
-                    ></div>
+              <div class="pokemon-stats">
+                <h3>Base Stats</h3>
+                @for (stat of pokemon?.stats; track stat.stat.name) {
+                  <div class="stat-row">
+                    <span class="stat-name">{{ stat.stat.name }}</span>
+                    <div class="stat-bar-container">
+                      <div
+                        class="stat-bar"
+                        [style.width.%]="(stat.base_stat / 255) * 100"
+                        [style.backgroundColor]="
+                          getPokemonTypeColor(pokemon?.types[0]?.type?.name)
+                        "
+                      ></div>
+                    </div>
+                    <span class="stat-value">{{ stat.base_stat }}</span>
                   </div>
-                  <span class="stat-value">{{ stat.base_stat }}</span>
-                </div>
-              }
+                }
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="evolution-chain">
-          <h3>Evolution Chain</h3>
-          <div class="evolution-list">
-            @for (evolution of evolutionChain; track evolution.id) {
-              <div
-                class="evolution-item"
-                [class.current]="evolution.id === pokemon?.id"
-              >
-                <img
-                  [src]="evolution.image"
-                  [alt]="evolution.name"
-                  class="evolution-image"
-                />
-                <p class="evolution-name">
-                  {{ evolution.name }}
-                </p>
-              </div>
-              @if (!$last) {
-                <div class="evolution-arrow">→</div>
+          <div class="evolution-chain">
+            <h3>Evolution Chain</h3>
+            <div class="evolution-list">
+              @for (evolution of evolutionChain; track evolution.id) {
+                <div
+                  class="evolution-item"
+                  [class.current]="evolution.id === pokemon?.id"
+                >
+                  <img
+                    [src]="evolution.image"
+                    [alt]="evolution.name"
+                    class="evolution-image"
+                  />
+                  <p class="evolution-name">
+                    {{ evolution.name }}
+                  </p>
+                </div>
+                @if (!$last) {
+                  <div class="evolution-arrow">→</div>
+                }
               }
-            }
+            </div>
           </div>
         </div>
       </div>

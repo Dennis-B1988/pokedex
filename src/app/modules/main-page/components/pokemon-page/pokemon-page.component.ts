@@ -50,11 +50,13 @@ export class PokemonPageComponent implements OnInit {
 
     const range = this.getCurrentRegionRange();
     const minId = range.start + 1;
+    const maxId = range.end + 1;
 
-    if (currentId === minId) return;
-
-    this.selectedPokemonId.set(this.selectedPokemonId()! - 1);
-    console.log(this.selectedPokemonId());
+    if (currentId <= minId) {
+      this.selectedPokemonId.set(maxId);
+    } else {
+      this.selectedPokemonId.set(currentId - 1);
+    }
   }
 
   showNextPokemonDetails() {
@@ -62,12 +64,14 @@ export class PokemonPageComponent implements OnInit {
     if (currentId === null) return;
 
     const range = this.getCurrentRegionRange();
+    const minId = range.start + 1;
     const maxId = range.end + 1;
 
-    if (currentId === maxId) return;
-
-    this.selectedPokemonId.set(this.selectedPokemonId()! + 1);
-    console.log(this.selectedPokemonId());
+    if (currentId >= maxId) {
+      this.selectedPokemonId.set(minId);
+    } else {
+      this.selectedPokemonId.set(currentId + 1);
+    }
   }
 
   closeDetails() {
