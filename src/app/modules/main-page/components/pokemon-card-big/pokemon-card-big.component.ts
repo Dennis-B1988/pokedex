@@ -1,6 +1,7 @@
 import {
   Component,
   DestroyRef,
+  effect,
   EventEmitter,
   inject,
   Input,
@@ -20,16 +21,27 @@ import { PokemonService } from "../../../../core/services/pokemon/pokemon.servic
   styleUrl: "./pokemon-card-big.component.scss",
 })
 export class PokemonCardBigComponent implements OnInit {
-  pokemonId = input.required<number>();
-  closeDetail = output<void>();
-
-  private destroyRef = inject(DestroyRef);
   private pokemonService = inject(PokemonService);
+  private destroyRef = inject(DestroyRef);
+
+  pokemonId = input.required<number>();
+  showPrior = output<void>();
+  showNext = output<void>();
+  closeDetail = output<void>();
 
   pokemon: any;
   evolutionChain: any[] = [];
   isLoading = true;
   error: string | null = null;
+
+  constructor() {
+    effect(() => {
+      const id = this.pokemonId();
+      if (id) {
+        this.loadPokemonDetails();
+      }
+    });
+  }
 
   ngOnInit() {
     if (this.pokemonId()) {
@@ -82,11 +94,11 @@ export class PokemonCardBigComponent implements OnInit {
     return this.pokemonService.getPokemonTypeColors(type);
   }
 
-  formatPokemonName(name: string): string {
-    if (!name) return "";
-    return name
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join("-");
-  }
+  // formatPokemonName(name: string): string {
+  //   if (!name) return "";
+  //   return name
+  //     .split("-")
+  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+  //     .join("-");
+  // }
 }

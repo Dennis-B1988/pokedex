@@ -8,6 +8,8 @@
 @if (selectedPokemonId() !== null) {
   <app-pokemon-card-big
     [pokemonId]="selectedPokemonId()!"
+    (showPrior)="showPriorPokemonDetails()"
+    (showNext)="showNextPokemonDetails()"
     (closeDetail)="closeDetails()"
   ></app-pokemon-card-big>
 }

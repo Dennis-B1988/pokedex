@@ -8,7 +8,7 @@
     } @else {
       <header class="pokemon-header">
         <span class="pokemon-id">#{{ pokemon?.id }}</span>
-        <h2 class="pokemon-name">{{ formatPokemonName(pokemon?.name) }}</h2>
+        <h2 class="pokemon-name">{{ pokemon?.name }}</h2>
         <button class="close-button" (click)="closeDetail.emit()">×</button>
       </header>
 
@@ -16,7 +16,7 @@
         <div class="pokemon-main">
           <img
             [src]="pokemon?.sprites?.other?.['official-artwork']?.front_default"
-            [alt]="'Official artwork of ' + formatPokemonName(pokemon?.name)"
+            [alt]="'Official artwork of ' + pokemon?.name"
             class="pokemon-image"
           />
 
@@ -63,11 +63,11 @@
               >
                 <img
                   [src]="evolution.image"
-                  [alt]="formatPokemonName(evolution.name)"
+                  [alt]="evolution.name"
                   class="evolution-image"
                 />
                 <p class="evolution-name">
-                  {{ formatPokemonName(evolution.name) }}
+                  {{ evolution.name }}
                 </p>
               </div>
               @if (!$last) {
@@ -78,5 +78,9 @@
         </div>
       </div>
     }
+  </div>
+  <div class="buttons">
+    <button (click)="showPrior.emit()">Prior</button>
+    <button (click)="showNext.emit()">Next</button>
   </div>
 </div>
