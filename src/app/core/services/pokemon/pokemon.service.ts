@@ -21,11 +21,14 @@ import {
   providedIn: "root",
 })
 export class PokemonService {
-  private pokeAPI = environment.pokemonURL;
   private http = inject(HttpClient);
   private destroyRef = inject(DestroyRef);
+  private pokeAPI = environment.pokemonURL;
+  private pokeSpeciesAPI = environment.pokemonSpeciesURL;
+  private pokeImageAPI = environment.pokemonImageURL;
 
   private pokemonCache: Record<string, Pokemon[]> = {};
+
   pokemons = signal<Pokemon[]>([]);
   isLoading = signal<boolean>(false);
 
@@ -114,5 +117,43 @@ export class PokemonService {
       pokemonTypeColors[color as keyof typeof pokemonTypeColors] || "";
 
     return baseColor ? `#${baseColor}cc` : "";
+  }
+
+  // In PokemonService
+  fetchPokemonSpecies(id: number): Observable<any> {
+    return this.http.get(`${this.pokeSpeciesAPI}/${id}/`);
+  }
+
+  fetchEvolutionChain(url: string): Observable<any> {
+    return this.http.get(url);
+  }
+
+  // Helper method to process the evolution chain response
+  getEvolutionChain(chain: any): any[] {
+    const evolutions: any[] = [];
+
+    // Process first form
+    const baseForm = {
+      name: chain.species.name,
+      id: this.getIdFromUrl(chain.species.url),
+      image: `${this.pokeImageAPI}/${this.getIdFromUrl(chain.species.url)}.png`,
+    };
+
+    evolutions.push(baseForm);
+
+    // Process evolutions recursively
+    if (chain.evolves_to && chain.evolves_to.length > 0) {
+      chain.evolves_to.forEach((evolution: any) => {
+        evolutions.push(...this.getEvolutionChain(evolution));
+      });
+    }
+
+    return evolutions;
+  }
+
+  // Extract the Pokémon ID from the species URL
+  private getIdFromUrl(url: string): number {
+    const parts = url.split("/");
+    return parseInt(parts[parts.length - 2]);
   }
 }

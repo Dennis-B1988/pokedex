@@ -1,3 +1,13 @@
 @for (pokemon of pokemons(); track pokemon.id) {
-  <app-pokemon-cards [pokemon]="pokemon"></app-pokemon-cards>
+  <app-pokemon-cards
+    [pokemon]="pokemon"
+    (click)="showPokemonDetails(pokemon.id)"
+  ></app-pokemon-cards>
+}
+
+@if (selectedPokemonId() !== null) {
+  <app-pokemon-card-big
+    [pokemonId]="selectedPokemonId()!"
+    (closeDetail)="closeDetails()"
+  ></app-pokemon-card-big>
 }
