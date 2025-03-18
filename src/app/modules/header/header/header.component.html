@@ -5,12 +5,13 @@
     <mat-form-field>
       <mat-label>Region</mat-label>
       <mat-select>
-        @for (region of regions; track region) {
+        @for (region of regionsWithRange; track region) {
           <mat-option
-            [value]="region"
-            (click)="selectRegion(region)"
-            [disabled]="region === currentRegion() || isLoading()"
-            >{{ region.charAt(0).toUpperCase() + region.slice(1) }}</mat-option
+            [value]="region.name"
+            (click)="selectRegion(region.name)"
+            [disabled]="region.name === currentRegion() || isLoading()"
+            >{{ region.name.charAt(0).toUpperCase() + region.name.slice(1) }}
+            {{ region.start }}-{{ region.end }}</mat-option
           >
         }
       </mat-select>

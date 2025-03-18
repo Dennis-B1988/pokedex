@@ -1,5 +1,11 @@
 import { HttpClient } from "@angular/common/http";
-import { DestroyRef, inject, Injectable, signal } from "@angular/core";
+import {
+  computed,
+  DestroyRef,
+  inject,
+  Injectable,
+  signal,
+} from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
   catchError,
@@ -44,6 +50,8 @@ export class PokemonService {
     alola: { start: 721, end: 808, title: "Alola Region" },
     galar: { start: 809, end: 897, title: "Galar Region" },
   };
+
+  currentRegionRange = computed(() => this.regionRanges[this.currentRegion()]);
 
   fetchPokemon(id: number): Observable<Pokemon> {
     return this.http.get<Pokemon>(`${this.pokeAPI}/${id}`);
