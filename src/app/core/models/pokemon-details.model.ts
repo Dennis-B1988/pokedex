@@ -4,7 +4,8 @@ export interface Pokemon {
   weight: number;
   height: number;
   types: Array<{ type: { name: string } }>;
-  abilities: string[];
+  // abilities: string[];
+  // stats: Array<{ base_stat: number; stat: { name: string } }>;
   sprites: {
     other: {
       "official-artwork": {

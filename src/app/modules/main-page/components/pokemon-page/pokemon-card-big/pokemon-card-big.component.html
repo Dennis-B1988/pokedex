@@ -1,5 +1,15 @@
-<div class="detailed-pokemon-overlay" (click)="$event.stopPropagation()">
-  <div class="detailed-pokemon-card-container">
+<div class="detailed-pokemon-overlay" (click)="handleOverlayClick($event)">
+  <img
+    src="assets/img/arrow-left.png"
+    alt="Previous"
+    class="button"
+    (click)="showPrior.emit()"
+    (click)="$event.stopPropagation()"
+  />
+  <div
+    class="detailed-pokemon-card-container"
+    (click)="$event.stopPropagation()"
+  >
     @if (isLoading) {
       <div class="loading">
         <app-loading-spinner></app-loading-spinner>
@@ -71,6 +81,8 @@
                     [src]="evolution.image"
                     [alt]="evolution.name"
                     class="evolution-image"
+                    [matTooltip]="getPokemonName(evolution.name)"
+                    matTooltipPosition="above"
                   />
                   <p class="evolution-name">
                     {{ evolution.name }}
@@ -86,8 +98,11 @@
       </div>
     }
   </div>
-  <div class="buttons">
-    <button (click)="showPrior.emit()">Prior</button>
-    <button (click)="showNext.emit()">Next</button>
-  </div>
+  <img
+    src="assets/img/arrow-right.png"
+    alt="Next"
+    class="button"
+    (click)="showNext.emit()"
+    (click)="$event.stopPropagation()"
+  />
 </div>

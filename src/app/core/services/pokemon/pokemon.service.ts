@@ -55,8 +55,21 @@ export class PokemonService {
 
   currentRegionRange = computed(() => this.regionRanges[this.currentRegion()]);
 
+  private getIdFromUrl(url: string): number {
+    const parts = url.split("/");
+    return parseInt(parts[parts.length - 2]);
+  }
+
   fetchPokemon(id: number): Observable<Pokemon> {
     return this.http.get<Pokemon>(`${this.pokeAPI}/${id}`);
+  }
+
+  fetchPokemonSpecies(id: number): Observable<any> {
+    return this.http.get(`${this.pokeSpeciesAPI}/${id}/`);
+  }
+
+  fetchEvolutionChain(url: string): Observable<any> {
+    return this.http.get(url);
   }
 
   loadPokemons(start: number, end: number): void {
@@ -100,12 +113,30 @@ export class PokemonService {
       });
   }
 
-  // Add methods to check if a region is valid
+  getEvolutionChain(chain: any): any[] {
+    const evolutions: any[] = [];
+
+    const baseForm = {
+      name: chain.species.name,
+      id: this.getIdFromUrl(chain.species.url),
+      image: `${this.pokeImageAPI}/${this.getIdFromUrl(chain.species.url)}.png`,
+    };
+
+    evolutions.push(baseForm);
+
+    if (chain.evolves_to && chain.evolves_to.length > 0) {
+      chain.evolves_to.forEach((evolution: any) => {
+        evolutions.push(...this.getEvolutionChain(evolution));
+      });
+    }
+
+    return evolutions;
+  }
+
   isValidRegion(region: string): region is RegionKey {
     return Object.keys(this.regionRanges).includes(region);
   }
 
-  // Method to change region
   changeRegion(region: RegionKey): void {
     this.currentRegion.set(region);
     const regionData = this.regionRanges[region];
@@ -119,47 +150,4 @@ export class PokemonService {
 
     return baseColor ? `#${baseColor}cc` : "";
   }
-
-  // In PokemonService
-  fetchPokemonSpecies(id: number): Observable<any> {
-    return this.http.get(`${this.pokeSpeciesAPI}/${id}/`);
-  }
-
-  fetchEvolutionChain(url: string): Observable<any> {
-    return this.http.get(url);
-  }
-
-  // Helper method to process the evolution chain response
-  getEvolutionChain(chain: any): any[] {
-    const evolutions: any[] = [];
-
-    // Process first form
-    const baseForm = {
-      name: chain.species.name,
-      id: this.getIdFromUrl(chain.species.url),
-      image: `${this.pokeImageAPI}/${this.getIdFromUrl(chain.species.url)}.png`,
-    };
-
-    evolutions.push(baseForm);
-
-    // Process evolutions recursively
-    if (chain.evolves_to && chain.evolves_to.length > 0) {
-      chain.evolves_to.forEach((evolution: any) => {
-        evolutions.push(...this.getEvolutionChain(evolution));
-      });
-    }
-
-    return evolutions;
-  }
-
-  // Extract the Pokémon ID from the species URL
-  private getIdFromUrl(url: string): number {
-    const parts = url.split("/");
-    return parseInt(parts[parts.length - 2]);
-  }
-
-  // sortPokemon(event: Event): void {
-  //   const inputValue = (event.target as HTMLInputElement).value;
-  //   this.sort.set(inputValue);
-  // }
 }

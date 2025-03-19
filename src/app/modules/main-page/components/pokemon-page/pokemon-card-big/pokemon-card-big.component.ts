@@ -3,6 +3,8 @@ import {
   DestroyRef,
   effect,
   EventEmitter,
+  Host,
+  HostListener,
   inject,
   Input,
   input,
@@ -11,13 +13,15 @@ import {
   Output,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { MatTooltip } from "@angular/material/tooltip";
 import { catchError, map, of, switchMap } from "rxjs";
+import { Pokemon } from "../../../../../core/models/pokemon-details.model";
 import { PokemonService } from "../../../../../core/services/pokemon/pokemon.service";
 import { LoadingSpinnerComponent } from "../../loading-spinner/loading-spinner.component";
 
 @Component({
   selector: "app-pokemon-card-big",
-  imports: [LoadingSpinnerComponent],
+  imports: [LoadingSpinnerComponent, MatTooltip],
   templateUrl: "./pokemon-card-big.component.html",
   styleUrl: "./pokemon-card-big.component.scss",
 })
@@ -95,11 +99,19 @@ export class PokemonCardBigComponent implements OnInit {
     return this.pokemonService.getPokemonTypeColors(type);
   }
 
-  // formatPokemonName(name: string): string {
-  //   if (!name) return "";
-  //   return name
-  //     .split("-")
-  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-  //     .join("-");
-  // }
+  getPokemonName(name: string): string {
+    return name
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join("-");
+  }
+
+  handleOverlayClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+
+    // Check if the clicked target is NOT inside .detailed-pokemon-card-container
+    if (!target.closest(".detailed-pokemon-card-container")) {
+      this.closeDetail.emit(); // Close the detailed card
+    }
+  }
 }
