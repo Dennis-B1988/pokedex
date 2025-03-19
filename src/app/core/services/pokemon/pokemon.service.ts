@@ -38,6 +38,8 @@ export class PokemonService {
   pokemons = signal<Pokemon[]>([]);
   isLoading = signal<boolean>(false);
 
+  sort = signal<string>("ID");
+
   currentRegion = signal<RegionKey>("kanto");
 
   regionRanges = {
@@ -110,15 +112,6 @@ export class PokemonService {
     this.loadPokemons(regionData.start, regionData.end);
   }
 
-  // formatPokemonName(name: string): string {
-  //   if (!name) return "";
-
-  //   return name
-  //     .split("-")
-  //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-  //     .join("-");
-  // }
-
   getPokemonTypeColors(color: string): string {
     if (!color) return "";
     const baseColor =
@@ -164,4 +157,9 @@ export class PokemonService {
     const parts = url.split("/");
     return parseInt(parts[parts.length - 2]);
   }
+
+  // sortPokemon(event: Event): void {
+  //   const inputValue = (event.target as HTMLInputElement).value;
+  //   this.sort.set(inputValue);
+  // }
 }

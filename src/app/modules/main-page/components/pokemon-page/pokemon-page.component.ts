@@ -33,10 +33,23 @@ export class PokemonPageComponent implements OnInit {
 
   filteredPokemons = this.pokemonSearchService.pokemonList;
   searchTerm = this.pokemonSearchService.searchTerm;
+  sort = this.pokemonService.sort;
 
   private getCurrentRegionRange() {
     const region = this.currentRegion();
     return this.pokemonService.regionRanges[region];
+  }
+
+  get sortedPokemons() {
+    if (this.sort() === "Name") {
+      return this.pokemons()
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name));
+    } else {
+      return this.pokemons()
+        .slice()
+        .sort((a, b) => a.id - b.id);
+    }
   }
 
   ngOnInit(): void {

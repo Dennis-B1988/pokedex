@@ -1,7 +1,7 @@
 import { Component, inject, signal } from "@angular/core";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { MatSelectModule } from "@angular/material/select";
+import { MatSelectChange, MatSelectModule } from "@angular/material/select";
 import { Router } from "@angular/router";
 import { RegionKey } from "../../../core/models/pokemon-details.model";
 import { PokemonSearchService } from "../../../core/services/pokemon-search/pokemon-search.service";
@@ -19,8 +19,8 @@ export class HeaderComponent {
   private router = inject(Router);
 
   searchTerm = this.pokemonSearchService.searchTerm;
-
   isLoading = this.pokemonService.isLoading;
+  sort = this.pokemonService.sort;
   currentRegion = this.pokemonService.currentRegion;
 
   regionsWithRange = Object.entries(this.pokemonService.regionRanges).map(
@@ -48,5 +48,9 @@ export class HeaderComponent {
 
     console.log("Input value:", inputValue);
     console.log("Search term:", this.searchTerm());
+  }
+
+  sortPokemon(event: MatSelectChange): void {
+    this.pokemonService.sort.set(event.value);
   }
 }

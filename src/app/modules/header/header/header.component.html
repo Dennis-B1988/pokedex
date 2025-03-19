@@ -18,7 +18,15 @@
     </mat-form-field>
 
     <mat-form-field class="search" appearance="outline">
-      <mat-label>Search Pokemon</mat-label>
+      <mat-label>Sort</mat-label>
+      <mat-select [value]="sort()" (selectionChange)="sortPokemon($event)">
+        <mat-option value="ID">ID</mat-option>
+        <mat-option value="Name">Name</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="search" appearance="outline">
+      <mat-label>Search by Name or ID</mat-label>
       <input matInput (input)="searchPokemon($event)" />
     </mat-form-field>
   </div>

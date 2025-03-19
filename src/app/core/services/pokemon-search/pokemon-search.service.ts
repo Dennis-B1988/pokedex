@@ -14,15 +14,17 @@ export class PokemonSearchService {
   searchPokemon(search: string) {
     this.searchTerm.set(search);
 
-    if (search.length <= 2) {
-      this.pokemonList.set([]); // Reset when search is too short
+    if (search.length === 0) {
+      this.pokemonList.set([]);
       return;
     }
 
     const filtered = this.pokemonService
       .pokemons()
-      .filter((pokemon) =>
-        pokemon.name.toLowerCase().includes(search.toLowerCase()),
+      .filter(
+        (pokemon) =>
+          pokemon.name.toLowerCase().includes(search.toLowerCase()) ||
+          pokemon.id.toString().includes(search),
       );
 
     this.pokemonList.set(filtered);

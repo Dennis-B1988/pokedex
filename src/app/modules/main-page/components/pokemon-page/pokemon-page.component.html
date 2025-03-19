@@ -10,7 +10,7 @@
     No Pokémon in this Region found matching "{{ searchTerm() }}".
   </p>
 } @else {
-  @for (pokemon of pokemons(); track pokemon.id) {
+  @for (pokemon of sortedPokemons; track pokemon.id) {
     <app-pokemon-cards
       [pokemon]="pokemon"
       (click)="showPokemonDetails(pokemon.id)"
