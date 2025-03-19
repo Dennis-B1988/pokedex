@@ -7,18 +7,10 @@ import {
   signal,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import {
-  catchError,
-  finalize,
-  forkJoin,
-  Observable,
-  of,
-  switchMap,
-} from "rxjs";
+import { catchError, finalize, forkJoin, Observable, of } from "rxjs";
 import { environment } from "../../../../environment/environment";
 import {
   Pokemon,
-  PokemonDetails,
   pokemonTypeColors,
   RegionKey,
 } from "../../models/pokemon-details.model";

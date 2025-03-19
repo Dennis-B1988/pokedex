@@ -1,11 +1,4 @@
 <div class="detailed-pokemon-overlay" (click)="handleOverlayClick($event)">
-  <img
-    src="assets/img/arrow-left.png"
-    alt="Previous"
-    class="button"
-    (click)="showPrior.emit()"
-    (click)="$event.stopPropagation()"
-  />
   <div
     class="detailed-pokemon-card-container"
     (click)="$event.stopPropagation()"
@@ -36,7 +29,7 @@
 
             <div class="pokemon-info">
               <div class="pokemon-types">
-                @for (type of pokemon?.types; track type.slot) {
+                @for (type of pokemon?.types; track uniqueTypes) {
                   <span
                     class="type-badge"
                     [style.backgroundColor]="
@@ -50,15 +43,17 @@
 
               <div class="pokemon-stats">
                 <h3>Base Stats</h3>
-                @for (stat of pokemon?.stats; track stat.stat.name) {
+                @for (stat of pokemon?.stats; track stat.stat.name ?? $index) {
                   <div class="stat-row">
-                    <span class="stat-name">{{ stat.stat.name }}</span>
+                    <span class="stat-name">{{
+                      getShortStatName(stat.stat.name)
+                    }}</span>
                     <div class="stat-bar-container">
                       <div
                         class="stat-bar"
                         [style.width.%]="(stat.base_stat / 255) * 100"
                         [style.backgroundColor]="
-                          getPokemonTypeColor(pokemon?.types[0]?.type?.name)
+                          getPokemonTypeColor(pokemon?.types?.[0]?.type?.name)
                         "
                       ></div>
                     </div>
@@ -98,11 +93,21 @@
       </div>
     }
   </div>
-  <img
-    src="assets/img/arrow-right.png"
-    alt="Next"
-    class="button"
-    (click)="showNext.emit()"
-    (click)="$event.stopPropagation()"
-  />
+
+  <div class="buttons">
+    <img
+      src="assets/img/arrow-left.png"
+      alt="Previous"
+      class="button"
+      (click)="showPrior.emit()"
+      (click)="$event.stopPropagation()"
+    />
+    <img
+      src="assets/img/arrow-right.png"
+      alt="Next"
+      class="button"
+      (click)="showNext.emit()"
+      (click)="$event.stopPropagation()"
+    />
+  </div>
 </div>

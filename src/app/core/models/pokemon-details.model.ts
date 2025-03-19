@@ -1,11 +1,8 @@
 export interface Pokemon {
   id: number;
   name: string;
-  weight: number;
-  height: number;
-  types: Array<{ type: { name: string } }>;
-  // abilities: string[];
-  // stats: Array<{ base_stat: number; stat: { name: string } }>;
+  types: Array<{ type: { name: string; slot: number } }>;
+  stats: Array<{ base_stat: number; stat: { name: string } }>;
   sprites: {
     other: {
       "official-artwork": {
@@ -14,10 +11,6 @@ export interface Pokemon {
     };
   };
 }
-
-export interface PokemonDetails {}
-
-export interface PokemonEvolution {}
 
 export interface RegionData {
   start: number;

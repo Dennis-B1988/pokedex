@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   DestroyRef,
   effect,
   EventEmitter,
@@ -34,10 +35,20 @@ export class PokemonCardBigComponent implements OnInit {
   showNext = output<void>();
   closeDetail = output<void>();
 
-  pokemon: any;
+  // pokemon: any;
+  pokemon: Pokemon | null = null;
   evolutionChain: any[] = [];
   isLoading = true;
   error: string | null = null;
+
+  statAbbreviations: Record<string, string> = {
+    hp: "HP",
+    attack: "ATK",
+    defense: "DEF",
+    "special-attack": "S-ATK",
+    "special-defense": "S-DEF",
+    speed: "SPD",
+  };
 
   constructor() {
     effect(() => {
@@ -95,7 +106,8 @@ export class PokemonCardBigComponent implements OnInit {
       });
   }
 
-  getPokemonTypeColor(type: string): string {
+  getPokemonTypeColor(type?: string): string {
+    if (!type) return "#000000";
     return this.pokemonService.getPokemonTypeColors(type);
   }
 
@@ -109,9 +121,21 @@ export class PokemonCardBigComponent implements OnInit {
   handleOverlayClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
 
-    // Check if the clicked target is NOT inside .detailed-pokemon-card-container
     if (!target.closest(".detailed-pokemon-card-container")) {
-      this.closeDetail.emit(); // Close the detailed card
+      this.closeDetail.emit();
     }
+  }
+
+  get uniqueTypes() {
+    return (
+      this.pokemon?.types.map((type, index) => ({
+        ...type,
+        uniqueSlot: type.type.slot ?? `fallback-${index}`,
+      })) || []
+    );
+  }
+
+  getShortStatName(statName: string): string {
+    return this.statAbbreviations[statName] || statName; // Default to full name if not found
   }
 }

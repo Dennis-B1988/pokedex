@@ -1,9 +1,6 @@
 import { Component, inject, input } from "@angular/core";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import {
-  Pokemon,
-  PokemonDetails,
-} from "../../../../../core/models/pokemon-details.model";
+import { Pokemon } from "../../../../../core/models/pokemon-details.model";
 import { PokemonService } from "../../../../../core/services/pokemon/pokemon.service";
 
 @Component({
