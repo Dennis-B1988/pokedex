@@ -2,9 +2,9 @@
   <img src="assets/img/logo.png" alt="Pokedex Logo" />
 
   <div class="filter-container">
-    <mat-form-field>
+    <mat-form-field class="region" appearance="outline">
       <mat-label>Region</mat-label>
-      <mat-select>
+      <mat-select [value]="currentRegion()">
         @for (region of regionsWithRange; track region) {
           <mat-option
             [value]="region.name"
@@ -16,6 +16,10 @@
         }
       </mat-select>
     </mat-form-field>
-    <input type="text" />
+
+    <mat-form-field class="search" appearance="outline">
+      <mat-label>Search Pokemon</mat-label>
+      <input matInput (input)="searchPokemon($event)" />
+    </mat-form-field>
   </div>
 </header>

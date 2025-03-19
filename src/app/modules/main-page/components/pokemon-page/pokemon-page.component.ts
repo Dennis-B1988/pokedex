@@ -1,9 +1,18 @@
-import { Component, DestroyRef, inject, OnInit, signal } from "@angular/core";
+import {
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  input,
+  OnInit,
+  signal,
+} from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, RouterModule } from "@angular/router";
+import { PokemonSearchService } from "../../../../core/services/pokemon-search/pokemon-search.service";
 import { PokemonService } from "../../../../core/services/pokemon/pokemon.service";
-import { PokemonCardBigComponent } from "../pokemon-card-big/pokemon-card-big.component";
-import { PokemonCardsComponent } from "../pokemon-cards/pokemon-cards.component";
+import { PokemonCardBigComponent } from "./pokemon-card-big/pokemon-card-big.component";
+import { PokemonCardsComponent } from "./pokemon-cards/pokemon-cards.component";
 
 @Component({
   selector: "app-pokemon-page",
@@ -13,13 +22,17 @@ import { PokemonCardsComponent } from "../pokemon-cards/pokemon-cards.component"
 })
 export class PokemonPageComponent implements OnInit {
   private pokemonService = inject(PokemonService);
+  private pokemonSearchService = inject(PokemonSearchService);
   private route = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
+
+  selectedPokemonId = signal<number | null>(null);
 
   pokemons = this.pokemonService.pokemons;
   currentRegion = this.pokemonService.currentRegion;
 
-  selectedPokemonId = signal<number | null>(null);
+  filteredPokemons = this.pokemonSearchService.pokemonList;
+  searchTerm = this.pokemonSearchService.searchTerm;
 
   private getCurrentRegionRange() {
     const region = this.currentRegion();

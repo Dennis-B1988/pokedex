@@ -1,8 +1,21 @@
-@for (pokemon of pokemons(); track pokemon.id) {
-  <app-pokemon-cards
-    [pokemon]="pokemon"
-    (click)="showPokemonDetails(pokemon.id)"
-  ></app-pokemon-cards>
+@if (filteredPokemons().length > 0 && filteredPokemons() !== null) {
+  @for (filteredPokemon of filteredPokemons(); track filteredPokemon.id) {
+    <app-pokemon-cards
+      [pokemon]="filteredPokemon"
+      (click)="showPokemonDetails(filteredPokemon.id)"
+    ></app-pokemon-cards>
+  }
+} @else if (searchTerm().length > 2) {
+  <p class="no-results">
+    No Pokémon in this Region found matching "{{ searchTerm() }}".
+  </p>
+} @else {
+  @for (pokemon of pokemons(); track pokemon.id) {
+    <app-pokemon-cards
+      [pokemon]="pokemon"
+      (click)="showPokemonDetails(pokemon.id)"
+    ></app-pokemon-cards>
+  }
 }
 
 @if (selectedPokemonId() !== null) {

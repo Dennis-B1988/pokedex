@@ -11,9 +11,9 @@ import {
   Output,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { catchError, forkJoin, map, Observable, of, switchMap } from "rxjs";
-import { PokemonService } from "../../../../core/services/pokemon/pokemon.service";
-import { LoadingSpinnerComponent } from "../loading-spinner/loading-spinner.component";
+import { catchError, map, of, switchMap } from "rxjs";
+import { PokemonService } from "../../../../../core/services/pokemon/pokemon.service";
+import { LoadingSpinnerComponent } from "../../loading-spinner/loading-spinner.component";
 
 @Component({
   selector: "app-pokemon-card-big",
