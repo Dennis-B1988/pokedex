@@ -47,11 +47,23 @@ export class PokemonService {
 
   currentRegionRange = computed(() => this.regionRanges[this.currentRegion()]);
 
+  /**
+   * Given a URL, returns the ID of the Pokemon from the URL.
+   * e.g. Given the URL 'https://pokeapi.co/api/v2/pokemon/25/', returns 25.
+   * @param url - The URL containing the Pokemon ID.
+   * @returns The Pokemon ID as a number.
+   */
   private getIdFromUrl(url: string): number {
     const parts = url.split("/");
     return parseInt(parts[parts.length - 2]);
   }
 
+  /**
+   * Fetches detailed information about a specific Pokémon by its ID.
+   *
+   * @param id - The unique identifier of the Pokémon to fetch.
+   * @returns An observable containing the Pokémon details.
+   */
   fetchPokemon(id: number): Observable<Pokemon> {
     return this.http.get<Pokemon>(`${this.pokeAPI}/${id}`);
   }
@@ -64,6 +76,19 @@ export class PokemonService {
     return this.http.get(url);
   }
 
+  /**
+   * Fetches a range of Pokémon by their IDs and stores the data in the service.
+   *
+   * @param start - The starting ID of the range of Pokémon to fetch.
+   * @param end - The ending ID of the range of Pokémon to fetch.
+   *
+   * This method caches the results using the start and end IDs as a key.
+   * If the data has been fetched before, it will return the cached data.
+   * If the data has not been fetched before, it will fetch the data and store it in the cache.
+   * The data is stored in the `pokemonCache` property as an array of `Pokemon` objects.
+   * The data is also emitted as an observable via the `pokemons` property.
+   * The `isLoading` property is set to true while the data is being fetched and false when the data is available.
+   */
   loadPokemons(start: number, end: number): void {
     const cacheKey = `${start}-${end}`;
 
@@ -105,6 +130,18 @@ export class PokemonService {
       });
   }
 
+  /**
+   * Recursively constructs the evolution chain of a Pokémon.
+   *
+   * This function takes a Pokémon evolution chain object and returns
+   * an array of objects representing each stage in the evolution chain.
+   * Each object contains the Pokémon's name, ID, and image URL.
+   *
+   * @param chain - The evolution chain object containing species and evolution
+   *                information.
+   * @returns An array of objects, each representing a stage in the Pokémon
+   *          evolution chain with the structure: { name, id, image }.
+   */
   getEvolutionChain(chain: any): any[] {
     const evolutions: any[] = [];
 
@@ -125,16 +162,36 @@ export class PokemonService {
     return evolutions;
   }
 
+  /**
+   * Determines if the given region is a valid region.
+   *
+   * @param region - The region to check.
+   * @returns true if the given region is a valid region, false otherwise.
+   */
   isValidRegion(region: string): region is RegionKey {
     return Object.keys(this.regionRanges).includes(region);
   }
 
+  /**
+   * Changes the current region to the given region and loads the Pokémon
+   * data for that region.
+   *
+   * @param region - The region to change to.
+   */
   changeRegion(region: RegionKey): void {
     this.currentRegion.set(region);
     const regionData = this.regionRanges[region];
     this.loadPokemons(regionData.start, regionData.end);
   }
 
+  /**
+   * Returns the color associated with the given Pokémon type.
+   *
+   * If no type is given, it returns a default color of black.
+   *
+   * @param type The name of the Pokémon type.
+   * @returns The hex color code associated with the given type.
+   */
   getPokemonTypeColors(color: string): string {
     if (!color) return "";
     const baseColor =

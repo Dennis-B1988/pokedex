@@ -33,6 +33,7 @@ export class PokemonCardBigComponent
   private elementRef = inject(ElementRef);
 
   private previouslyFocusedElement: HTMLElement | null = null;
+  private keydownListener!: () => void;
 
   pokemonId = input.required<number>();
   showPrior = output<void>();
@@ -88,9 +89,13 @@ export class PokemonCardBigComponent
     }
 
     this.previouslyFocusedElement = document.activeElement as HTMLElement;
-    this.renderer.listen("document", "keydown", (event: KeyboardEvent) => {
-      this.handleKeyDown(event);
-    });
+    this.keydownListener = this.renderer.listen(
+      "document",
+      "keydown",
+      (event: KeyboardEvent) => {
+        this.handleKeyDown(event);
+      },
+    );
   }
 
   /**
@@ -221,18 +226,18 @@ export class PokemonCardBigComponent
   }
 
   /**
-   * Handles keyboard events for the detailed Pokémon overlay.
+   * Handles keydown events on the detailed Pokémon overlay.
    *
-   * This method listens for specific key presses when the overlay is open:
-   * - "Escape": Emits the `closeDetail` event to close the overlay.
-   * - "ArrowLeft": Emits the `showPrior` event to navigate to the previous Pokémon.
-   * - "ArrowRight": Emits the `showNext` event to navigate to the next Pokémon.
+   * Listens for the Escape, ArrowLeft, and ArrowRight keys. If the Escape key
+   * is pressed, it emits the closeDetail event. If the ArrowLeft or ArrowRight
+   * keys are pressed, it emits the showPrior or showNext event, respectively.
+   * The event is prevented from propagating to prevent scrolling.
    *
-   * The method also prevents the default behavior for the left and right arrow keys.
-   *
-   * @param event The keyboard event that triggered the action.
+   * @param event The keydown event that triggered the action.
    */
   handleKeyDown(event: KeyboardEvent): void {
+    if (!this.closeDetail || !this.showPrior || !this.showNext) return;
+
     if (event.key === "Escape") {
       this.closeDetail.emit();
     }
@@ -315,13 +320,19 @@ export class PokemonCardBigComponent
   /**
    * Called when the component is destroyed.
    *
-   * This method is called when the component is destroyed. It sets focus to the
-   * element that had focus before the detailed Pokémon overlay was opened, if
-   * that element still exists.
+   * This method is responsible for returning focus to the element that had focus
+   * before the component was opened. It also removes the global event listener
+   * that was set up to respond to keyboard events (e.g. closing the dialog when
+   * the user presses the Escape key).
    */
+
   ngOnDestroy(): void {
     if (this.previouslyFocusedElement) {
       this.previouslyFocusedElement.focus();
+    }
+
+    if (this.keydownListener) {
+      this.keydownListener();
     }
   }
 }

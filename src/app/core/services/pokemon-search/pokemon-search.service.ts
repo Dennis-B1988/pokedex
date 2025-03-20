@@ -11,6 +11,14 @@ export class PokemonSearchService {
   pokemonList = signal<Pokemon[]>([]);
   searchTerm = signal<string>("");
 
+  /**
+   * Updates the `pokemonList` signal with an array of Pokemon filtered by
+   * the given search string. The search is case-insensitive and will
+   * match either the name of the Pokemon or its ID. If the search string
+   * is empty, the `pokemonList` will be set to an empty array.
+   *
+   * @param search The search string to filter by.
+   */
   searchPokemon(search: string) {
     this.searchTerm.set(search);
 

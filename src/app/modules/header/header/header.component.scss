@@ -1,15 +1,15 @@
 header {
-  height: 100px;
+  height: 6.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 50px;
-  padding-right: 50px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding-left: 3.125rem;
+  padding-right: 3.125rem;
+  box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
 
   img {
-    height: 80px;
+    height: 5rem;
   }
 }
 
@@ -30,7 +30,7 @@ header {
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  gap: 20px;
+  gap: 1.25rem;
 }
 
 .form-field {
@@ -47,16 +47,16 @@ header {
   display: none;
 }
 
-@media screen and (max-width: 1020px) {
+@media screen and (max-width: 63.75rem) {
   header {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 0.625rem;
+    padding-right: 0.625rem;
   }
 }
 
-@media screen and (max-width: 950px) {
+@media screen and (max-width: 59.375rem) {
   .filter-container {
-    padding-right: 10px;
+    padding-right: 0.625rem;
   }
   .logo-big {
     display: none;
@@ -67,7 +67,7 @@ header {
   }
 }
 
-@media screen and (max-width: 680px) {
+@media screen and (max-width: 42.5rem) {
   .region,
   .sort {
     display: none;
@@ -83,14 +83,14 @@ header {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 5px;
-    width: 80px;
-    height: 40px;
+    gap: 0.3125rem;
+    width: 5rem;
+    height: 2.5rem;
     cursor: pointer;
 
     div {
-      width: 30px;
-      height: 3px;
+      width: 1.875rem;
+      height: 0.1875rem;
       background-color: black;
     }
   }
@@ -100,8 +100,8 @@ header {
   }
 }
 
-@media screen and (max-width: 350px) {
+@media screen and (max-width: 21.875rem) {
   .search {
-    width: 170px;
+    width: 10.625rem;
   }
 }

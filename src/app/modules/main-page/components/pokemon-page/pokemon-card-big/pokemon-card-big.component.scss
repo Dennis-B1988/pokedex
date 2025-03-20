@@ -54,8 +54,8 @@
 }
 
 .close-button:focus {
-  outline: 2px solid #4d90fe;
-  box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.5);
+  outline: 0.125rem solid #4d90fe;
+  box-shadow: 0 0 0 0.125rem rgba(77, 144, 254, 0.5);
 }
 
 .close-button:hover {
@@ -232,8 +232,8 @@
 }
 
 .navigation-button:focus {
-  outline: 2px solid #4d90fe;
-  box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.5);
+  outline: 0.125rem solid #4d90fe;
+  box-shadow: 0 0 0 0.125rem rgba(77, 144, 254, 0.5);
 }
 
 .button-icon {
@@ -244,10 +244,10 @@
 /* Screen reader only class */
 .sr-only {
   position: absolute;
-  width: 1px;
-  height: 1px;
+  width: 0.0625rem;
+  height: 0.0625rem;
   padding: 0;
-  margin: -1px;
+  margin: -0.0625rem;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
