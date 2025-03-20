@@ -1,21 +1,36 @@
-<div class="detailed-pokemon-overlay" (click)="handleOverlayClick($event)">
+<div
+  class="detailed-pokemon-overlay"
+  (click)="handleOverlayClick($event)"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="pokemon-detail-title"
+>
   <div
     class="detailed-pokemon-card-container"
     (click)="$event.stopPropagation()"
   >
-    <button class="close-button" (click)="closeDetail.emit()">×</button>
+    <button
+      class="close-button"
+      (click)="closeDetail.emit()"
+      aria-label="Close Pokémon details"
+    >
+      ×
+    </button>
 
     @if (isLoading) {
-      <div class="loading">
+      <div class="loading" aria-live="polite">
         <app-loading-spinner></app-loading-spinner>
+        <span class="sr-only">Loading Pokémon details</span>
       </div>
     } @else if (error) {
-      <div class="error">{{ error }}</div>
+      <div class="error" aria-live="assertive">{{ error }}</div>
     } @else {
       <div class="detailed-pokemon-card">
         <header class="pokemon-header">
-          <span class="pokemon-id">#{{ pokemon?.id }}</span>
-          <h2 class="pokemon-name">{{ pokemon?.name }}</h2>
+          <span class="pokemon-id" aria-hidden="true">#{{ pokemon?.id }}</span>
+          <h2 class="pokemon-name" id="pokemon-detail-title">
+            {{ pokemon?.name }}
+          </h2>
         </header>
 
         <div class="pokemon-content">
@@ -29,13 +44,14 @@
             />
 
             <div class="pokemon-info">
-              <div class="pokemon-types">
+              <div class="pokemon-types" aria-label="Pokémon types">
                 @for (type of pokemon?.types; track uniqueTypes) {
                   <span
                     class="type-badge"
                     [style.backgroundColor]="
                       getPokemonTypeColor(type.type.name)
                     "
+                    [attr.aria-label]="type.type.name + ' type'"
                   >
                     {{ type.type.name }}
                   </span>
@@ -43,39 +59,65 @@
               </div>
 
               <div class="pokemon-stats">
-                <h3>Base Stats</h3>
-                @for (stat of pokemon?.stats; track stat.stat.name ?? $index) {
-                  <div class="stat-row">
-                    <span class="stat-name">{{
-                      getShortStatName(stat.stat.name)
-                    }}</span>
-                    <div class="stat-bar-container">
+                <h3 id="stats-heading">Base Stats</h3>
+                <div
+                  class="stats-list"
+                  role="list"
+                  aria-labelledby="stats-heading"
+                >
+                  @for (
+                    stat of pokemon?.stats;
+                    track stat.stat.name ?? $index
+                  ) {
+                    <div class="stat-row" role="listitem">
+                      <span class="stat-name">{{
+                        getShortStatName(stat.stat.name)
+                      }}</span>
                       <div
-                        class="stat-bar"
-                        [style.width.%]="(stat.base_stat / 255) * 100"
-                        [style.backgroundColor]="
-                          getPokemonTypeColor(pokemon?.types?.[0]?.type?.name)
+                        class="stat-bar-container"
+                        [attr.aria-label]="
+                          stat.stat.name + ': ' + stat.base_stat + ' out of 255'
                         "
-                      ></div>
+                        aria-valuemin="0"
+                        aria-valuemax="255"
+                        [attr.aria-valuenow]="stat.base_stat"
+                        role="progressbar"
+                      >
+                        <div
+                          class="stat-bar"
+                          [style.width.%]="(stat.base_stat / 255) * 100"
+                          [style.backgroundColor]="
+                            getPokemonTypeColor(pokemon?.types?.[0]?.type?.name)
+                          "
+                        ></div>
+                      </div>
+                      <span class="stat-value">{{ stat.base_stat }}</span>
                     </div>
-                    <span class="stat-value">{{ stat.base_stat }}</span>
-                  </div>
-                }
+                  }
+                </div>
               </div>
             </div>
           </div>
 
           <div class="evolution-chain">
-            <h3>Evolution Chain</h3>
-            <div class="evolution-list">
+            <h3 id="evolution-heading">Evolution Chain</h3>
+            <div
+              class="evolution-list"
+              role="list"
+              aria-labelledby="evolution-heading"
+            >
               @for (evolution of evolutionChain; track evolution.id) {
                 <div
                   class="evolution-item"
                   [class.current]="evolution.id === pokemon?.id"
+                  role="listitem"
+                  [attr.aria-current]="
+                    evolution.id === pokemon?.id ? 'true' : 'false'
+                  "
                 >
                   <img
                     [src]="evolution.image"
-                    [alt]="evolution.name"
+                    [alt]="'Evolution form: ' + evolution.name"
                     class="evolution-image"
                     [matTooltip]="getPokemonName(evolution.name)"
                     matTooltipPosition="above"
@@ -85,7 +127,7 @@
                   </p>
                 </div>
                 @if (!$last) {
-                  <div class="evolution-arrow">→</div>
+                  <div class="evolution-arrow" aria-hidden="true">→</div>
                 }
               }
             </div>
@@ -96,19 +138,27 @@
   </div>
 
   <div class="buttons">
-    <img
-      src="assets/img/arrow-left.png"
-      alt="Previous"
-      class="button"
-      (click)="showPrior.emit()"
-      (click)="$event.stopPropagation()"
-    />
-    <img
-      src="assets/img/arrow-right.png"
-      alt="Next"
-      class="button"
-      (click)="showNext.emit()"
-      (click)="$event.stopPropagation()"
-    />
+    <button
+      class="navigation-button previous"
+      aria-label="Show previous Pokémon"
+      (click)="showPrior.emit(); $event.stopPropagation()"
+    >
+      <img
+        src="assets/img/arrow-left.png"
+        alt="Previous Pokémon"
+        class="button-icon"
+      />
+    </button>
+    <button
+      class="navigation-button next"
+      aria-label="Show next Pokémon"
+      (click)="showNext.emit(); $event.stopPropagation()"
+    >
+      <img
+        src="assets/img/arrow-right.png"
+        alt="Next Pokémon"
+        class="button-icon"
+      />
+    </button>
   </div>
 </div>

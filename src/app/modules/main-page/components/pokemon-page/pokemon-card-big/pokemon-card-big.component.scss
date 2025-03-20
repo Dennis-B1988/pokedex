@@ -36,12 +36,30 @@
 
 .close-button {
   position: absolute;
-  top: 0;
+  top: 0.625rem;
   right: 0.625rem;
   background: white;
   border: none;
   font-size: 2rem;
   cursor: pointer;
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  /* Enhanced focus styles for keyboard navigation */
+  transition: all 0.2s;
+}
+
+.close-button:focus {
+  outline: 2px solid #4d90fe;
+  box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.5);
+}
+
+.close-button:hover {
+  background-color: #f0f0f0;
 }
 
 .detailed-pokemon-card {
@@ -186,21 +204,54 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .buttons {
   display: flex;
   justify-content: center;
   gap: 1.625rem;
-  img {
-    background-color: #fff;
-    border-radius: 50%;
-    cursor: pointer;
+}
 
-    &:hover {
-      background-color: #bebebe;
-    }
-  }
+.navigation-button {
+  background-color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background-color 0.2s;
+}
+
+.navigation-button:hover {
+  background-color: #bebebe;
+}
+
+.navigation-button:focus {
+  outline: 2px solid #4d90fe;
+  box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.5);
+}
+
+.button-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 @media screen and (max-width: 41.25rem) {
