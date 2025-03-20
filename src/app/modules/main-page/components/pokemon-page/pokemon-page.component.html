@@ -1,20 +1,35 @@
 @if (filteredPokemons().length > 0 && filteredPokemons() !== null) {
+  <span class="visually-hidden" role="status" aria-live="polite">
+    Showing {{ filteredPokemons().length }} filtered Pokémon results
+  </span>
   @for (filteredPokemon of filteredPokemons(); track filteredPokemon.id) {
     <app-pokemon-cards
       [pokemon]="filteredPokemon"
       (click)="showPokemonDetails(filteredPokemon.id)"
+      (keydown.enter)="showPokemonDetails(filteredPokemon.id)"
+      (keydown.space)="
+        showPokemonDetails(filteredPokemon.id); $event.preventDefault()
+      "
+      tabindex="0"
+      role="button"
+      [attr.aria-label]="'View details for ' + filteredPokemon.name"
     ></app-pokemon-cards>
   }
 } @else if (searchTerm().length > 2) {
-  <p class="no-results">
+  <p class="no-results" role="alert" id="search-results-status">
     No Pokémon in this Region found matching "{{ searchTerm() }}".
   </p>
 } @else {
+  <span class="visually-hidden" role="status"> Showing all Pokémon </span>
   @for (pokemon of sortedPokemons; track pokemon.id) {
     <app-pokemon-cards
       [pokemon]="pokemon"
       (click)="showPokemonDetails(pokemon.id)"
       (keydown.enter)="showPokemonDetails(pokemon.id)"
+      (keydown.space)="showPokemonDetails(pokemon.id); $event.preventDefault()"
+      tabindex="0"
+      role="button"
+      [attr.aria-label]="'View details for ' + pokemon.name"
     ></app-pokemon-cards>
   }
 }
@@ -25,5 +40,8 @@
     (showPrior)="showPriorPokemonDetails()"
     (showNext)="showNextPokemonDetails()"
     (closeDetail)="closeDetails()"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="pokemon-detail-title"
   ></app-pokemon-card-big>
 }
