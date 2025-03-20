@@ -20,6 +20,8 @@ export class HeaderComponent {
 
   searchTerm = this.pokemonSearchService.searchTerm;
   isLoading = this.pokemonService.isLoading;
+  menuOpen: boolean = false;
+  windowWidth: number = window.innerWidth;
   sort = this.pokemonService.sort;
   currentRegion = this.pokemonService.currentRegion;
 
@@ -34,6 +36,18 @@ export class HeaderComponent {
   constructor() {
     console.log(this.regionsWithRange);
   }
+
+  ngOnInit() {
+    window.addEventListener("resize", this.updateWindowWidth);
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener("resize", this.updateWindowWidth);
+  }
+
+  updateWindowWidth = () => {
+    this.windowWidth = window.innerWidth;
+  };
 
   selectRegion(region: RegionKey): void {
     this.currentRegion.set(region);
@@ -52,5 +66,9 @@ export class HeaderComponent {
 
   sortPokemon(event: MatSelectChange): void {
     this.pokemonService.sort.set(event.value);
+  }
+
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
   }
 }

@@ -1,17 +1,11 @@
 import {
   Component,
-  computed,
   DestroyRef,
   effect,
-  EventEmitter,
-  Host,
-  HostListener,
   inject,
-  Input,
   input,
   OnInit,
   output,
-  Output,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatTooltip } from "@angular/material/tooltip";
@@ -35,7 +29,6 @@ export class PokemonCardBigComponent implements OnInit {
   showNext = output<void>();
   closeDetail = output<void>();
 
-  // pokemon: any;
   pokemon: Pokemon | null = null;
   evolutionChain: any[] = [];
   isLoading = true;
@@ -68,23 +61,19 @@ export class PokemonCardBigComponent implements OnInit {
   loadPokemonDetails() {
     this.isLoading = true;
 
-    // First get the Pokémon details
     this.pokemonService
       .fetchPokemon(this.pokemonId())
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         switchMap((pokemon) => {
           this.pokemon = pokemon;
-          // Then get the species data which contains the evolution chain URL
           return this.pokemonService.fetchPokemonSpecies(this.pokemonId());
         }),
         switchMap((species) => {
-          // Now get the evolution chain using the URL from species
           const evolutionUrl = species.evolution_chain.url;
           return this.pokemonService.fetchEvolutionChain(evolutionUrl);
         }),
         map((evolutionData) => {
-          // Process the evolution chain
           return this.pokemonService.getEvolutionChain(evolutionData.chain);
         }),
         catchError((error) => {
@@ -118,14 +107,6 @@ export class PokemonCardBigComponent implements OnInit {
       .join("-");
   }
 
-  handleOverlayClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-
-    if (!target.closest(".detailed-pokemon-card-container")) {
-      this.closeDetail.emit();
-    }
-  }
-
   get uniqueTypes() {
     return (
       this.pokemon?.types.map((type, index) => ({
@@ -136,6 +117,14 @@ export class PokemonCardBigComponent implements OnInit {
   }
 
   getShortStatName(statName: string): string {
-    return this.statAbbreviations[statName] || statName; // Default to full name if not found
+    return this.statAbbreviations[statName] || statName;
+  }
+
+  handleOverlayClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+
+    if (!target.closest(".detailed-pokemon-card-container")) {
+      this.closeDetail.emit();
+    }
   }
 }
