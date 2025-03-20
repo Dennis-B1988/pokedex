@@ -14,6 +14,7 @@
     <app-pokemon-cards
       [pokemon]="pokemon"
       (click)="showPokemonDetails(pokemon.id)"
+      (keydown.enter)="showPokemonDetails(pokemon.id)"
     ></app-pokemon-cards>
   }
 }

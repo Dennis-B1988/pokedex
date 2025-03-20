@@ -1,6 +1,19 @@
-<div class="pokemon-card" [style.boxShadow]="getBoxShadowStyle()">
+<div
+  class="pokemon-card"
+  [style.boxShadow]="getBoxShadowStyle()"
+  tabindex="0"
+  role="article"
+  [attr.aria-label]="
+    'Pokémon #' +
+    (pokemon()?.id || 'N/A') +
+    ': ' +
+    (pokemon()?.name || 'Unknown Pokémon')
+  "
+>
   <header class="pokemon-header">
-    <span class="pokemon-id">#{{ pokemon()?.id || "N/A" }}</span>
+    <span class="pokemon-id" aria-hidden="true"
+      >#{{ pokemon()?.id || "N/A" }}</span
+    >
   </header>
 
   <h3 class="pokemon-name">
@@ -15,22 +28,28 @@
     />
   </div>
 
-  <footer class="pokemon-types">
-    <img
-      matTooltip="{{ pokemon()?.types?.[0]?.type?.name }}"
-      matTooltipPosition="above"
-      class="pokemon-type"
-      [class]="pokemon()?.types?.[0]?.type?.name"
-      [src]="'assets/img/' + pokemon()?.types?.[0]?.type?.name + '.svg'"
-    />
-    @if (pokemon()?.types?.[1]) {
+  <footer class="pokemon-types" aria-label="Pokémon types">
+    <div class="type-wrapper">
       <img
-        matTooltip="{{ pokemon()?.types?.[1]?.type?.name }}"
-        matTooltipPosition="above"
+        [attr.aria-label]="pokemon()?.types?.[0]?.type?.name + ' type'"
         class="pokemon-type"
-        [class]="pokemon()?.types?.[1]?.type?.name"
-        [src]="'assets/img/' + pokemon()?.types?.[1]?.type?.name + '.svg'"
+        [class]="pokemon()?.types?.[0]?.type?.name"
+        [src]="'assets/img/' + pokemon()?.types?.[0]?.type?.name + '.svg'"
+        [alt]="pokemon()?.types?.[0]?.type?.name + ' type'"
       />
+      <span class="sr-only">{{ pokemon()?.types?.[0]?.type?.name }}</span>
+    </div>
+    @if (pokemon()?.types?.[1]) {
+      <div class="type-wrapper">
+        <img
+          [attr.aria-label]="pokemon()?.types?.[1]?.type?.name + ' type'"
+          class="pokemon-type"
+          [class]="pokemon()?.types?.[1]?.type?.name"
+          [src]="'assets/img/' + pokemon()?.types?.[1]?.type?.name + '.svg'"
+          [alt]="pokemon()?.types?.[1]?.type?.name + ' type'"
+        />
+        <span class="sr-only">{{ pokemon()?.types?.[1]?.type?.name }}</span>
+      </div>
     }
   </footer>
 </div>

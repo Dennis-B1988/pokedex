@@ -1,11 +1,10 @@
 import { Component, inject, input } from "@angular/core";
-import { MatTooltipModule } from "@angular/material/tooltip";
 import { Pokemon } from "../../../../../core/models/pokemon-details.model";
 import { PokemonService } from "../../../../../core/services/pokemon/pokemon.service";
 
 @Component({
   selector: "app-pokemon-cards",
-  imports: [MatTooltipModule],
+  imports: [],
   templateUrl: "./pokemon-cards.component.html",
   styleUrl: "./pokemon-cards.component.scss",
 })
@@ -13,16 +12,20 @@ export class PokemonCardsComponent {
   pokemonService = inject(PokemonService);
 
   pokemon = input<Pokemon>();
-  // isLoading = this.pokemonService.isLoading;
-
-  // pokemonName(name: string): string {
-  //   return this.pokemonService.formatPokemonName(name);
-  // }
 
   pokemonTypeColors(color: string): string {
     return this.pokemonService.getPokemonTypeColors(color);
   }
 
+  /**
+   * Returns a box-shadow style string that is used to style the Pokémon card.
+   *
+   * If the Pokémon has a single type, the box shadow is just the primary color.
+   * If the Pokémon has a secondary type, the box shadow is a combination of the
+   * primary and secondary colors.
+   *
+   * @returns A box-shadow style string.
+   */
   getBoxShadowStyle(): string {
     const primaryType = this.pokemon()?.types?.[0]?.type?.name || "";
     const secondaryType = this.pokemon()?.types?.[1]?.type?.name;

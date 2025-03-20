@@ -12,37 +12,85 @@
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   position: relative;
   text-transform: capitalize;
   cursor: pointer;
+  padding: 1rem;
 
+  /* Focus styles for keyboard navigation only */
+  &:focus-visible {
+    outline: 3px solid #4d90fe;
+    outline-offset: 2px;
+  }
+
+  /* Remove outline for mouse clicks */
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Hover effect only */
   &:hover {
     .pokemon-image {
       transform: scale(1.5);
-      transition: transform 0.5s ease-in-out;
     }
   }
+
+  /* Keyboard focus effect only - not triggered by clicks */
+  &:focus-visible:not(:hover) {
+    .pokemon-image {
+      transform: scale(1.5);
+    }
+  }
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 .pokemon-image {
   width: 8rem;
   height: 8rem;
+  transition: transform 0.5s ease-in-out;
+}
 
-  &:hover {
-    transform: scale(1.5);
-    transition: transform 0.5s ease-in-out;
-  }
+.pokemon-name {
+  margin: 0.5rem 0;
+  text-align: center;
 }
 
 .pokemon-types {
   display: flex;
   gap: 0.625rem;
+}
 
-  img {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
+.type-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pokemon-type {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Ensure sufficient contrast ratio for text */
+.pokemon-id,
+.pokemon-name {
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 @media screen and (max-width: 630px) {
@@ -51,11 +99,9 @@
     height: 15rem;
   }
 
-  .pokemon-types {
-    img {
-      width: 1.3rem;
-      height: 1.3rem;
-    }
+  .pokemon-type {
+    width: 1.3rem;
+    height: 1.3rem;
   }
 }
 
@@ -78,10 +124,8 @@
     height: 4rem;
   }
 
-  .pokemon-types {
-    img {
-      width: 1rem;
-      height: 1rem;
-    }
+  .pokemon-type {
+    width: 1rem;
+    height: 1rem;
   }
 }
