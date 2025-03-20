@@ -4,64 +4,62 @@
   left: 0;
   right: 0;
   bottom: 0;
-  // width: 100vw;
-  // height: 100vh;
   background-color: rgba(0, 0, 0, 0.75);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 24px;
+  gap: 1rem;
   overflow: hidden;
   z-index: 1000;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .detailed-pokemon-card-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   background-color: white;
-  border-radius: 16px;
+  border-radius: 1rem;
   width: 90%;
-  max-width: 800px;
+  max-width: 50rem;
   height: 38.75rem;
   max-height: 90vh;
   overflow-y: auto;
-  padding: 24px;
-  box-shadow: 0 0 24px rgba(0, 0, 0, 0.3);
+  clip-path: inset(0 round 1rem);
+  padding: 1.5rem;
+  box-shadow: 0 0 1.5rem rgba(0, 0, 0, 0.3);
+}
+
+.close-button {
+  position: absolute;
+  top: 0;
+  right: 0.625rem;
+  background: white;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
 }
 
 .detailed-pokemon-card {
-  // display: flex;
-  // flex-direction: column;
-  // align-items: center;
-  // justify-content: center;
-  // background-color: white;
   text-transform: capitalize;
   width: 100%;
   height: 100%;
-  // border-radius: 16px;
-  // width: 90%;
-  // max-width: 800px;
-  // height: 38.75rem;
-  // max-height: 90vh;
-  // overflow-y: auto;
-  // padding: 24px;
-  // box-shadow: 0 0 24px rgba(0, 0, 0, 0.3);
 }
 
 .pokemon-header {
   display: flex;
   align-items: center;
-  margin-bottom: 24px;
-  position: relative;
+  margin-bottom: 1.5rem;
 }
 
 .pokemon-id {
   font-size: 1.2rem;
   color: #666;
-  margin-right: 12px;
+  margin-right: 0.75rem;
 }
 
 .pokemon-name {
@@ -70,52 +68,40 @@
   margin: 0;
 }
 
-.close-button {
-  position: absolute;
-  right: 0;
-  top: 0;
-  background: none;
-  border: none;
-  font-size: 2rem;
-  cursor: pointer;
-  padding: 4px 12px;
-}
-
 .pokemon-content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 1.5rem;
 }
 
 .pokemon-main {
   display: flex;
-  gap: 24px;
+  gap: 1.5rem;
   flex-wrap: wrap;
 }
 
 .pokemon-image {
-  // width: 250px;
-  // height: 250px;
   width: 35%;
+  min-width: 10rem;
   height: 35%;
+  min-height: 10rem;
   object-fit: contain;
 }
 
 .pokemon-info {
   flex: 1;
-  // min-width: 300px;
   width: 40%;
 }
 
 .pokemon-types {
   display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .type-badge {
-  padding: 4px 12px;
-  border-radius: 16px;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
   color: white;
   font-weight: bold;
   text-transform: capitalize;
@@ -124,35 +110,35 @@
 .stat-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .stat-name {
-  width: 50px;
+  width: 3.125rem;
   text-transform: capitalize;
 }
 
 .stat-bar-container {
   flex: 1;
-  height: 8px;
+  height: 0.5rem;
   background-color: #eee;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   overflow: hidden;
 }
 
 .stat-bar {
   height: 100%;
-  border-radius: 4px;
+  border-radius: 0.25rem;
 }
 
 .stat-value {
-  width: 35px;
+  width: 2.1875rem;
   text-align: right;
 }
 
 .evolution-chain {
-  margin-top: 24px;
+  margin-top: 1.5rem;
 }
 
 .evolution-list {
@@ -160,15 +146,15 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .evolution-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
   transition: all 0.2s;
 }
 
@@ -177,13 +163,13 @@
 }
 
 .evolution-image {
-  width: 120px;
-  height: 120px;
+  width: 7.5rem;
+  height: 7.5rem;
   object-fit: contain;
 }
 
 .evolution-name {
-  margin-top: 8px;
+  margin-top: 0.5rem;
   text-align: center;
   text-transform: capitalize;
 }
@@ -200,15 +186,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  // text-align: center;
-  // padding: 48px;
-  // font-size: 1.2rem;
 }
 
 .buttons {
   display: flex;
   justify-content: center;
-  gap: 26px;
+  gap: 1.625rem;
   img {
     background-color: #fff;
     border-radius: 50%;
@@ -217,5 +200,28 @@
     &:hover {
       background-color: #bebebe;
     }
+  }
+}
+
+@media screen and (max-width: 41.25rem) {
+  .evolution-image {
+    width: 5rem;
+    height: 5rem;
+  }
+}
+
+@media screen and (max-width: 27.1875rem) {
+  .pokemon-main {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pokemon-info {
+    width: 100%;
+  }
+
+  .evolution-list {
+    justify-content: flex-start;
   }
 }

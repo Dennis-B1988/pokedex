@@ -3,6 +3,8 @@
     class="detailed-pokemon-card-container"
     (click)="$event.stopPropagation()"
   >
+    <button class="close-button" (click)="closeDetail.emit()">×</button>
+
     @if (isLoading) {
       <div class="loading">
         <app-loading-spinner></app-loading-spinner>
@@ -14,7 +16,6 @@
         <header class="pokemon-header">
           <span class="pokemon-id">#{{ pokemon?.id }}</span>
           <h2 class="pokemon-name">{{ pokemon?.name }}</h2>
-          <button class="close-button" (click)="closeDetail.emit()">×</button>
         </header>
 
         <div class="pokemon-content">
