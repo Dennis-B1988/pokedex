@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { HeaderComponent } from "./modules/header/header/header.component";
+import { HeaderComponent } from "./modules/header/header.component";
 
 @Component({
   selector: "app-root",

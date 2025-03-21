@@ -1,0 +1,123 @@
+<header
+  [style]="menuOpen && windowWidth < 680 ? 'height: 15.625rem' : ''"
+  role="banner"
+>
+  <div class="header-container">
+    <div class="logo-container">
+      <img class="logo-big" src="assets/img/logo.png" alt="Pokedex Logo" />
+      <img
+        class="logo-small"
+        src="assets/img/logo-small.png"
+        alt="Pokedex Logo"
+      />
+    </div>
+
+    <div class="filter-container" role="search">
+      <mat-form-field class="form-field region" appearance="outline">
+        <mat-label id="mobile-region-label">Region</mat-label>
+        <mat-select
+          [value]="currentRegion()"
+          (selectionChange)="selectRegion($event.value)"
+          aria-labelledby="mobile-region-label"
+          aria-label="Select Pokemon region"
+        >
+          @for (region of regionsWithRange; track region) {
+            <mat-option
+              [value]="region.name"
+              [disabled]="region.name === currentRegion() || isLoading()"
+            >
+              {{ region.name.charAt(0).toUpperCase() + region.name.slice(1) }}
+              {{ region.start }}-{{ region.end }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="form-field sort" appearance="outline">
+        <mat-label id="sort-label">Sort</mat-label>
+        <mat-select
+          [value]="sort()"
+          (selectionChange)="sortPokemon($event)"
+          aria-labelledby="sort-label"
+          aria-label="Sort Pokemon list"
+        >
+          <mat-option value="ID">ID</mat-option>
+          <mat-option value="Name">Name</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="form-field search"
+        appearance="outline"
+        floatLabel="always"
+      >
+        <mat-label id="search-label">Name or ID</mat-label>
+        <input
+          matInput
+          (input)="searchPokemon($event)"
+          placeholder="Search"
+          type="search"
+          aria-labelledby="search-label"
+          aria-label="Search Pokemon by name or ID"
+        />
+      </mat-form-field>
+    </div>
+
+    <button
+      class="menu-button"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="menuOpen"
+      aria-controls="small-screen-menu"
+      [style]="menuOpen ? 'backgroundColor: #e5e5e5' : ''"
+      aria-label="Toggle filter menu"
+    >
+      <span class="sr-only">Menu</span>
+      <div class="menu-icon">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </button>
+  </div>
+
+  <div
+    id="small-screen-menu"
+    class="small-screen-content"
+    [style]="{ display: menuOpen && windowWidth < 680 ? 'flex' : 'none' }"
+    role="region"
+    aria-label="Additional filters"
+  >
+    <mat-form-field class="form-field" appearance="outline">
+      <mat-label id="mobile-region-label">Region</mat-label>
+      <mat-select
+        [value]="currentRegion()"
+        (selectionChange)="selectRegion($event.value)"
+        aria-labelledby="mobile-region-label"
+        aria-label="Select Pokemon region"
+      >
+        @for (region of regionsWithRange; track region) {
+          <mat-option
+            [value]="region.name"
+            [disabled]="region.name === currentRegion() || isLoading()"
+          >
+            {{ region.name.charAt(0).toUpperCase() + region.name.slice(1) }}
+            {{ region.start }}-{{ region.end }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="form-field" appearance="outline">
+      <mat-label id="mobile-sort-label">Sort</mat-label>
+      <mat-select
+        [value]="sort()"
+        (selectionChange)="sortPokemon($event)"
+        aria-labelledby="mobile-sort-label"
+        aria-label="Sort Pokemon list"
+      >
+        <mat-option value="ID">ID</mat-option>
+        <mat-option value="Name">Name</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</header>

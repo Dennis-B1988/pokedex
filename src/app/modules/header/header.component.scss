@@ -47,6 +47,48 @@ header {
   display: none;
 }
 
+// Screen reader only class
+.sr-only {
+  position: absolute;
+  width: 0.0625rem;
+  height: 0.0625rem;
+  padding: 0;
+  margin: -0.0625rem;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  display: none;
+
+  &:focus-visible {
+    outline: 0.125rem solid #1976d2;
+    outline-offset: 0.125rem;
+  }
+}
+
+.menu-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3125rem;
+  width: 2.5rem;
+  height: 2.5rem;
+
+  div {
+    width: 1.875rem;
+    height: 0.1875rem;
+    background-color: black;
+  }
+}
+
 @media screen and (max-width: 63.75rem) {
   header {
     padding-left: 0.625rem;
@@ -78,21 +120,8 @@ header {
     padding-right: 0;
   }
 
-  .menu {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0.3125rem;
-    width: 5rem;
-    height: 2.5rem;
-    cursor: pointer;
-
-    div {
-      width: 1.875rem;
-      height: 0.1875rem;
-      background-color: black;
-    }
+  .menu-button {
+    display: block;
   }
 
   .small-screen-content {
@@ -103,5 +132,12 @@ header {
 @media screen and (max-width: 21.875rem) {
   .search {
     width: 10.625rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
   }
 }
