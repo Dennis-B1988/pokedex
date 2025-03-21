@@ -1,9 +1,9 @@
+@import "../../styles/_mixins";
+@import "../../styles/_variables";
+
 header {
+  @include flex(column, flex-start, center);
   height: 6.25rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
   padding-left: 3.125rem;
   padding-right: 3.125rem;
   box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
@@ -14,23 +14,16 @@ header {
 }
 
 .header-container {
+  @include flex(row, space-between, center);
   width: 100%;
   height: 6.25rem;
   max-width: 112.5rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .filter-container {
   width: 90%;
   height: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 1.25rem;
+  @include flex(row, flex-end, center, 1.25rem);
 }
 
 .form-field {
@@ -67,18 +60,11 @@ header {
   cursor: pointer;
   display: none;
 
-  &:focus-visible {
-    outline: 0.125rem solid #1976d2;
-    outline-offset: 0.125rem;
-  }
+  @include focus-outline;
 }
 
 .menu-icon {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 0.3125rem;
+  @include flex(column, center, center, 0.3125rem);
   width: 2.5rem;
   height: 2.5rem;
 
@@ -89,17 +75,13 @@ header {
   }
 }
 
-@media screen and (max-width: 63.75rem) {
+@include responsive("tablet") {
   header {
-    padding-left: 0.625rem;
-    padding-right: 0.625rem;
+    padding: 0 0.625rem;
   }
 }
 
-@media screen and (max-width: 59.375rem) {
-  .filter-container {
-    padding-right: 0.625rem;
-  }
+@include responsive("small-tablet") {
   .logo-big {
     display: none;
   }
@@ -109,7 +91,7 @@ header {
   }
 }
 
-@media screen and (max-width: 42.5rem) {
+@include responsive("mobile") {
   .region,
   .sort {
     display: none;
@@ -129,7 +111,7 @@ header {
   }
 }
 
-@media screen and (max-width: 21.875rem) {
+@include responsive("small-mobile") {
   .search {
     width: 10.625rem;
   }

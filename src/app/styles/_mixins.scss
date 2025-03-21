@@ -1,0 +1,20 @@
+@mixin flex($direction: row, $justify: flex-start, $align: center, $gap: 0) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  gap: $gap;
+}
+
+@mixin responsive($size) {
+  @media screen and (max-width: map-get($breakpoints, $size)) {
+    @content;
+  }
+}
+
+@mixin focus-outline {
+  &:focus-visible {
+    outline: 0.125rem solid $focus-color;
+    outline-offset: 0.125rem;
+  }
+}

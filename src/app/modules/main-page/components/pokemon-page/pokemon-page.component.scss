@@ -20,3 +20,9 @@
   white-space: nowrap;
   border: 0;
 }
+
+@media screen and (max-width: 32.5rem) {
+  :host {
+    gap: 1rem;
+  }
+}

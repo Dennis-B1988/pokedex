@@ -1,3 +1,6 @@
+@import "../../../../../styles/mixins";
+@import "../../../../../styles/variables";
+
 .pokemon-card {
   width: 18.75rem;
   height: 18.75rem;
@@ -93,7 +96,7 @@
   text-shadow: 0.0625rem 0.0625rem 0.125rem rgba(0, 0, 0, 0.8);
 }
 
-@media screen and (max-width: 39.375rem) {
+@include responsive("mobile") {
   .pokemon-card {
     width: 15rem;
     height: 15rem;
@@ -105,17 +108,19 @@
   }
 }
 
-@media screen and (max-width: 32.5rem) {
+@include responsive("small-mobile") {
   .pokemon-card {
-    width: 8.5rem;
-    height: 8.5rem;
+    width: 9rem;
+    height: 9rem;
+    padding: 0;
 
     h3 {
-      font-size: 1rem;
+      font-size: 0.875rem;
+      margin: 0;
     }
 
     span {
-      font-size: 0.75rem;
+      font-size: 0.55rem;
     }
   }
 
