@@ -2,6 +2,7 @@
 @import "../../../../../styles/variables";
 
 .pokemon-card {
+  @include flex(column, space-around, center);
   width: 18.75rem;
   height: 18.75rem;
   background: linear-gradient(
@@ -11,10 +12,6 @@
   );
   color: white;
   border-radius: 0.625rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
@@ -23,25 +20,18 @@
   cursor: pointer;
   padding: 1rem;
 
-  /* Focus styles for keyboard navigation only */
-  &:focus-visible {
-    outline: 3px solid #4d90fe;
-    outline-offset: 2px;
-  }
+  @include focus-outline;
 
-  /* Remove outline for mouse clicks */
   &:focus:not(:focus-visible) {
     outline: none;
   }
 
-  /* Hover effect only */
   &:hover {
     .pokemon-image {
       transform: scale(1.5);
     }
   }
 
-  /* Keyboard focus effect only - not triggered by clicks */
   &:focus-visible:not(:hover) {
     .pokemon-image {
       transform: scale(1.5);
@@ -79,9 +69,7 @@
 }
 
 .type-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @include flex(row, column, center);
 }
 
 .pokemon-type {
@@ -89,7 +77,6 @@
   height: 1.5rem;
 }
 
-/* Ensure sufficient contrast ratio for text */
 .pokemon-id,
 .pokemon-name {
   color: white;
