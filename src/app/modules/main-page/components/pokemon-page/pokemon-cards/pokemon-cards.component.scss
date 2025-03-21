@@ -64,8 +64,7 @@
 }
 
 .pokemon-types {
-  display: flex;
-  gap: 0.625rem;
+  @include flex(row, center, center, 0.625rem);
 }
 
 .type-wrapper {

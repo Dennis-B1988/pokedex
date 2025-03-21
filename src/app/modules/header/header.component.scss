@@ -1,5 +1,5 @@
-@import "../../styles/_mixins";
-@import "../../styles/_variables";
+@import "../../styles/mixins";
+@import "../../styles/variables";
 
 header {
   @include flex(column, flex-start, center);
