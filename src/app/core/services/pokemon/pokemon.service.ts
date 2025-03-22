@@ -19,7 +19,6 @@ import {
   providedIn: "root",
 })
 export class PokemonService {
-  private http = inject(HttpClient);
   private destroyRef = inject(DestroyRef);
   private pokeAPI = environment.pokemonURL;
   private pokeSpeciesAPI = environment.pokemonSpeciesURL;
@@ -46,6 +45,8 @@ export class PokemonService {
   };
 
   currentRegionRange = computed(() => this.regionRanges[this.currentRegion()]);
+
+  constructor(private http: HttpClient) {}
 
   /**
    * Given a URL, returns the ID of the Pokemon from the URL.
@@ -121,9 +122,7 @@ export class PokemonService {
           this.pokemonCache[cacheKey] = validPokemon;
           this.pokemons.set(pokemonData);
         },
-        error: (error) => {
-          console.log(error);
-        },
+        error: (err) => console.error("Failed to fetch Pokémon", err),
         complete: () => {
           this.isLoading.set(false);
         },
