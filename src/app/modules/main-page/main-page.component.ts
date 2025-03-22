@@ -14,10 +14,4 @@ export class MainPageComponent {
 
   pokemons = this.pokemonService.pokemons;
   isLoading = this.pokemonService.isLoading;
-
-  constructor() {
-    setTimeout(() => {
-      console.log(this.pokemons());
-    }, 3000);
-  }
 }

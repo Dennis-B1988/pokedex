@@ -9,12 +9,17 @@ import { HeaderComponent } from "./modules/header/header.component";
   styleUrl: "./app.component.scss",
 })
 export class AppComponent {
-  title = "pokedex";
+  title = "pokédex";
 
   showScrollToTop: boolean = false;
 
   @ViewChild("cardContainer", { static: false }) cardContainer!: ElementRef;
 
+  /**
+   * Checks if the scroll position of the Pokemon card container is greater than
+   * 200px. If it is, it sets the showScrollToTop property to true, otherwise
+   * sets it to false. This is used to show or hide the "Scroll to top" button.
+   */
   onScroll(): void {
     const scrollContainer = this.cardContainer.nativeElement;
     const scrollTop = scrollContainer.scrollTop;
