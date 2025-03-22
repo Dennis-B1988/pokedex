@@ -24,8 +24,8 @@ export class PokemonPageComponent implements OnInit {
   currentRegion = this.pokemonService.currentRegion;
 
   filteredPokemons = this.pokemonSearchService.pokemonList;
-  searchTerm = this.pokemonSearchService.searchTerm;
   sort = this.pokemonService.sort;
+  searchTerm = this.pokemonSearchService.searchTerm;
 
   /**
    * Returns the range of pokemons for the current region, or null if

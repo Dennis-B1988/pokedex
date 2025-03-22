@@ -1,3 +1,4 @@
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { RouterOutlet } from "@angular/router";
@@ -17,6 +18,7 @@ describe("AppComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [provideHttpClientTesting()],
       imports: [AppComponent, MockHeaderComponent, RouterOutlet],
     }).compileComponents();
 
