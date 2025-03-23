@@ -290,7 +290,7 @@ export class PokemonCardBigComponent
    * moving outside the container, maintaining accessibility within
    * the dialog.
    */
-  private setupFocusTrap(): void {
+  setupFocusTrap(): void {
     const element = this.elementRef.nativeElement;
     const focusableElements = element.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
