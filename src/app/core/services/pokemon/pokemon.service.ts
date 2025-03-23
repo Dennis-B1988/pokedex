@@ -103,7 +103,7 @@ export class PokemonService {
     const pokemonRequests = Array.from({ length: end - start + 1 }, (_, i) =>
       this.fetchPokemon(start + i + 1).pipe(
         catchError((error) => {
-          console.log(error);
+          console.error(error);
           return of({} as Pokemon);
         }),
       ),

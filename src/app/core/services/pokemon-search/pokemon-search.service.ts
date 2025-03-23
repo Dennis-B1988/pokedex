@@ -36,6 +36,5 @@ export class PokemonSearchService {
       );
 
     this.pokemonList.set(filtered);
-    console.log(this.pokemonList());
   }
 }

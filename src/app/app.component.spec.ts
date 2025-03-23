@@ -1,8 +1,9 @@
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { Component } from "@angular/core";
+import { provideHttpClient } from "@angular/common/http";
+import { Component, signal } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { RouterOutlet } from "@angular/router";
 import { AppComponent } from "./app.component";
+import { PokemonService } from "./core/services/pokemon/pokemon.service"; // Update with correct path
 
 // Mock HeaderComponent as standalone
 @Component({
@@ -12,14 +13,76 @@ import { AppComponent } from "./app.component";
 })
 class MockHeaderComponent {}
 
+// Create a mock PokemonService with signals
+class MockPokemonService {
+  pokemons = signal<any[]>([]);
+  isLoading = signal<boolean>(false);
+  sort = signal<string>("ID");
+  currentRegion = signal<any>("kanto");
+
+  regionRanges = {
+    kanto: { start: 0, end: 150, title: "Kanto Region" },
+    johto: { start: 151, end: 250, title: "Johto Region" },
+    hoenn: { start: 251, end: 385, title: "Hoenn Region" },
+    sinnoh: { start: 386, end: 492, title: "Sinnoh Region" },
+    unova: { start: 493, end: 648, title: "Unova Region" },
+    kalos: { start: 649, end: 720, title: "Kalos Region" },
+    alola: { start: 721, end: 808, title: "Alola Region" },
+    galar: { start: 809, end: 897, title: "Galar Region" },
+  };
+
+  currentRegionRange = signal(this.regionRanges["kanto"]);
+
+  loadPokemons() {
+    // Mock implementation
+  }
+
+  changeRegion() {
+    // Mock implementation
+  }
+
+  getPokemonTypeColors(color: string): string {
+    return "#ff0000cc"; // Mock color return
+  }
+
+  fetchPokemon() {
+    // Mock implementation
+    return { subscribe: () => {} };
+  }
+
+  fetchPokemonSpecies() {
+    // Mock implementation
+    return { subscribe: () => {} };
+  }
+
+  fetchEvolutionChain() {
+    // Mock implementation
+    return { subscribe: () => {} };
+  }
+
+  getEvolutionChain() {
+    return []; // Mock implementation
+  }
+
+  isValidRegion() {
+    return true; // Mock implementation
+  }
+}
+
 describe("AppComponent", () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
+  let mockPokemonService: MockPokemonService;
 
   beforeEach(async () => {
+    mockPokemonService = new MockPokemonService();
+
     await TestBed.configureTestingModule({
-      providers: [provideHttpClientTesting()],
       imports: [AppComponent, MockHeaderComponent, RouterOutlet],
+      providers: [
+        provideHttpClient(),
+        { provide: PokemonService, useValue: mockPokemonService },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
@@ -96,23 +159,25 @@ describe("AppComponent", () => {
     });
   });
 
-  // Integration test for ViewChild with DOM interaction
   it("should handle scroll events and update showScrollToTop", () => {
-    // Create a mock card container element for the component
-    const mockCardContainer = document.createElement("div");
-    mockCardContainer.scrollTop = 0;
-    component.cardContainer = { nativeElement: mockCardContainer } as any;
+    // Create a more explicit mock that matches exactly what the component expects
+    const mockNativeElement = { scrollTop: 0 };
+    component.cardContainer = { nativeElement: mockNativeElement } as any;
 
-    // Initial state should be false
+    // Verify initial state
     expect(component.showScrollToTop).toBeFalse();
 
-    // Simulate scrolling
-    mockCardContainer.scrollTop = 250;
+    // Directly modify the scrollTop of our mock
+    mockNativeElement.scrollTop = 250;
+
+    // Call onScroll to trigger the check
     component.onScroll();
+
+    // Now verify the flag is updated
     expect(component.showScrollToTop).toBeTrue();
 
-    // Simulate scrolling back to top
-    mockCardContainer.scrollTop = 50;
+    // Test scrolling back to top
+    mockNativeElement.scrollTop = 50;
     component.onScroll();
     expect(component.showScrollToTop).toBeFalse();
   });

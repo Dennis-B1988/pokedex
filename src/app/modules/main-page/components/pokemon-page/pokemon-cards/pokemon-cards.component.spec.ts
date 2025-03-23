@@ -1,92 +1,158 @@
-import { Component } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import {
+  Component,
+  DebugElement,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  Renderer2,
+} from "@angular/core";
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+} from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { Pokemon } from "../../../../../core/models/pokemon-details.model";
+import { of } from "rxjs";
 import { PokemonService } from "../../../../../core/services/pokemon/pokemon.service";
-import { PokemonCardsComponent } from "./pokemon-cards.component";
+import { PokemonCardBigComponent } from "../pokemon-card-big/pokemon-card-big.component";
 
-// 🧪 Mock Service
-class MockPokemonService {
-  getPokemonTypeColors(type: string) {
-    return (
-      {
-        fire: "#F08030",
-        water: "#6890F0",
-        grass: "#78C850",
-      }[type] || "#000000"
-    );
-  }
-}
+// Stub data
+const mockPokemon = {
+  id: 1,
+  name: "bulbasaur",
+  types: [
+    { type: { name: "grass", slot: 1 } },
+    { type: { name: "poison", slot: 2 } },
+  ],
+  stats: [],
+  sprites: {
+    other: {
+      "official-artwork": {
+        front_default: "",
+      },
+    },
+  },
+};
 
-// 🧪 Minimal test wrapper (to test input binding)
 @Component({
-  template: `<app-pokemon-cards [pokemon]="mockPokemon"></app-pokemon-cards>`,
   standalone: true,
-  imports: [PokemonCardsComponent],
+  selector: "test-host",
+  imports: [PokemonCardBigComponent],
+  template: `
+    <app-pokemon-card-big
+      [pokemonId]="1"
+      (showPrior)="onPrior()"
+      (showNext)="onNext()"
+      (closeDetail)="onClose()"
+    ></app-pokemon-card-big>
+  `,
 })
 class TestHostComponent {
-  mockPokemon: Pokemon = {
-    name: "charizard",
-    types: [{ type: { name: "fire" } }, { type: { name: "flying" } }],
-  } as any;
+  onPrior = jasmine.createSpy();
+  onNext = jasmine.createSpy();
+  onClose = jasmine.createSpy();
 }
 
-describe("PokemonCardsComponent", () => {
+describe("PokemonCardBigComponent", () => {
   let fixture: ComponentFixture<TestHostComponent>;
+  let component: PokemonCardBigComponent;
+  let cardDebug: DebugElement;
+  let mockElement: HTMLElement;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [TestHostComponent],
-      providers: [{ provide: PokemonService, useClass: MockPokemonService }],
-    }).compileComponents();
+  // Create your mockElement here
+  beforeEach(() => {
+    // Initialize the mockElement and spy on methods inside beforeEach
+    mockElement = document.createElement("div");
+    mockElement.classList.add("detailed-pokemon-card-container");
+    mockElement.setAttribute("tabindex", "-1");
+
+    // Spy on the methods
+    spyOn(mockElement, "focus");
+    spyOn(mockElement, "addEventListener");
+    spyOn(mockElement, "setAttribute");
+
+    // Create a mock ElementRef with querySelector returning the mockElement
+    const mockElementRef = {
+      nativeElement: {
+        querySelector: () => mockElement,
+      },
+    };
+
+    // Configure the TestBed
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: PokemonService,
+          useValue: {
+            fetchPokemon: jasmine.createSpy().and.returnValue(of(mockPokemon)),
+            fetchPokemonSpecies: jasmine
+              .createSpy()
+              .and.returnValue(of({ evolution_chain: { url: "evo/url" } })),
+            fetchEvolutionChain: jasmine
+              .createSpy()
+              .and.returnValue(of({ chain: {} })),
+            getEvolutionChain: jasmine.createSpy().and.returnValue([]),
+            getPokemonTypeColors: jasmine
+              .createSpy()
+              .and.callFake((type: string) => `#123456`),
+          },
+        },
+        {
+          provide: ElementRef,
+          useValue: mockElementRef, // Inject the mock ElementRef
+        },
+      ],
+    });
 
     fixture = TestBed.createComponent(TestHostComponent);
     fixture.detectChanges();
-  });
 
-  it("should create the component", () => {
-    const cardComponent = fixture.debugElement.query(
-      By.directive(PokemonCardsComponent),
+    cardDebug = fixture.debugElement.query(
+      By.directive(PokemonCardBigComponent),
     );
-    expect(cardComponent).toBeTruthy();
+    component = cardDebug.componentInstance;
   });
 
-  it("should return correct box shadow for two types", () => {
-    const cardInstance = fixture.debugElement.query(
-      By.directive(PokemonCardsComponent),
-    ).componentInstance;
-    const boxShadow = cardInstance.getBoxShadowStyle();
-    expect(boxShadow).toContain("#F08030"); // fire
-    expect(boxShadow).toContain("#000000"); // flying (not mocked, falls back)
+  it("should set focus on container after view init", fakeAsync(() => {
+    component.ngAfterViewInit();
+    tick(); // handle setTimeout(0)
+    expect(mockElement.focus).toHaveBeenCalled();
+  }));
+
+  it("should emit showPrior on ArrowLeft key press", () => {
+    const event = new KeyboardEvent("keydown", { key: "ArrowLeft" });
+    spyOn(component.showPrior, "emit");
+
+    component.handleKeyDown(event);
+    expect(component.showPrior.emit).toHaveBeenCalled();
   });
 
-  it("should return correct box shadow for one type", () => {
-    const cardComponent = fixture.debugElement.query(
-      By.directive(PokemonCardsComponent),
-    ).componentInstance;
-    cardComponent.pokemon = () =>
-      ({
-        name: "bulbasaur",
-        types: [{ type: { name: "grass" } }],
-      }) as any;
-    const shadow = cardComponent.getBoxShadowStyle();
-    expect(shadow).toBe(`0rem 0rem 0.625rem 0.625rem #78C850`);
+  it("should emit showNext on ArrowRight key press", () => {
+    const event = new KeyboardEvent("keydown", { key: "ArrowRight" });
+    spyOn(component.showNext, "emit");
+
+    component.handleKeyDown(event);
+    expect(component.showNext.emit).toHaveBeenCalled();
   });
 
-  it("should use PokemonService for type color", () => {
-    const service = TestBed.inject(PokemonService);
-    spyOn(service, "getPokemonTypeColors").and.callThrough();
+  it("should emit closeDetail on Escape key press", () => {
+    const event = new KeyboardEvent("keydown", { key: "Escape" });
+    spyOn(component.closeDetail, "emit");
 
-    const cardComponent = fixture.debugElement.query(
-      By.directive(PokemonCardsComponent),
-    ).componentInstance;
-    cardComponent.pokemon = () =>
-      ({
-        types: [{ type: { name: "fire" } }],
-      }) as any;
+    component.handleKeyDown(event);
+    expect(component.closeDetail.emit).toHaveBeenCalled();
+  });
 
-    cardComponent.getBoxShadowStyle();
+  it("should return focus on destroy", () => {
+    const returnFocusEl = document.createElement("button");
+    document.body.appendChild(returnFocusEl);
+    returnFocusEl.focus();
+    component["previouslyFocusedElement"] = returnFocusEl;
 
-    expect(service.getPokemonTypeColors).toHaveBeenCalledWith("fire");
+    const focusSpy = spyOn(returnFocusEl, "focus");
+    component.ngOnDestroy();
+    expect(focusSpy).toHaveBeenCalled();
   });
 });

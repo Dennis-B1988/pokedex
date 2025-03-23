@@ -1,136 +1,411 @@
-// import { TestBed } from "@angular/core/testing";
-// import { of } from "rxjs";
-// import { PokemonService } from "../../../../../core/services/pokemon/pokemon.service";
-// import { PokemonCardBigComponent } from "./pokemon-card-big.component";
+import { ElementRef, Renderer2, signal } from "@angular/core";
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+} from "@angular/core/testing";
+import { MatTooltip } from "@angular/material/tooltip";
+import { By } from "@angular/platform-browser";
+import { of, throwError } from "rxjs";
+import { Pokemon } from "../../../../../core/models/pokemon-details.model";
+import { PokemonService } from "../../../../../core/services/pokemon/pokemon.service";
+import { LoadingSpinnerComponent } from "../../loading-spinner/loading-spinner.component";
+import { PokemonCardBigComponent } from "./pokemon-card-big.component";
 
-// class MockPokemonService {
-//   getPokemonTypeColors(type: string) {
-//     return (
-//       {
-//         fire: "#F08030",
-//         grass: "#78C850",
-//         water: "#6890F0",
-//       }[type] || "#000000"
-//     );
-//   }
-// }
+describe("PokemonCardBigComponent", () => {
+  let component: PokemonCardBigComponent;
+  let fixture: ComponentFixture<PokemonCardBigComponent>;
+  let pokemonService: jasmine.SpyObj<PokemonService>;
+  let renderer: jasmine.SpyObj<Renderer2>;
 
-// describe("PokemonCardBigComponent (Unit)", () => {
-//   let component: PokemonCardBigComponent;
+  const mockPokemon: Pokemon = {
+    id: 1,
+    name: "bulbasaur",
+    types: [
+      { type: { name: "grass", slot: 1 } },
+      { type: { name: "poison", slot: 2 } },
+    ],
+    stats: [
+      { base_stat: 45, stat: { name: "hp" } },
+      { base_stat: 49, stat: { name: "attack" } },
+      { base_stat: 49, stat: { name: "defense" } },
+      { base_stat: 65, stat: { name: "special-attack" } },
+      { base_stat: 65, stat: { name: "special-defense" } },
+      { base_stat: 45, stat: { name: "speed" } },
+    ],
+    sprites: {
+      other: {
+        "official-artwork": {
+          front_default: "https://example.com/bulbasaur.png",
+        },
+      },
+    },
+  };
 
-//   beforeEach(() => {
-//     TestBed.configureTestingModule({
-//       providers: [{ provide: PokemonService, useClass: MockPokemonService }],
-//     });
+  const mockSpecies = {
+    evolution_chain: {
+      url: "https://pokeapi.co/api/v2/evolution-chain/1/",
+    },
+  };
 
-//     component = new PokemonCardBigComponent();
-//   });
+  const mockEvolutionChain = {
+    chain: {
+      species: {
+        name: "bulbasaur",
+        url: "https://pokeapi.co/api/v2/pokemon-species/1/",
+      },
+      evolves_to: [
+        {
+          species: {
+            name: "ivysaur",
+            url: "https://pokeapi.co/api/v2/pokemon-species/2/",
+          },
+          evolves_to: [
+            {
+              species: {
+                name: "venusaur",
+                url: "https://pokeapi.co/api/v2/pokemon-species/3/",
+              },
+              evolves_to: [],
+            },
+          ],
+        },
+      ],
+    },
+  };
 
-//   it("should return the correct type color from service", () => {
-//     expect(component.getPokemonTypeColor("fire")).toBe("#F08030");
-//     expect(component.getPokemonTypeColor("unknown")).toBe("#000000");
-//     expect(component.getPokemonTypeColor(undefined)).toBe("#000000");
-//   });
+  const mockEvolutions = [
+    { name: "bulbasaur", id: 1 },
+    { name: "ivysaur", id: 2 },
+    { name: "venusaur", id: 3 },
+  ];
 
-//   it("should format Pokémon names properly", () => {
-//     expect(component.getPokemonName("mr-mime")).toBe("Mr-Mime");
-//     expect(component.getPokemonName("charizard")).toBe("Charizard");
-//   });
+  beforeEach(async () => {
+    const pokemonServiceSpy = jasmine.createSpyObj("PokemonService", [
+      "fetchPokemon",
+      "fetchPokemonSpecies",
+      "fetchEvolutionChain",
+      "getEvolutionChain",
+      "getPokemonTypeColors",
+    ]);
 
-//   it("should return short stat names if available", () => {
-//     expect(component.getShortStatName("special-defense")).toBe("S-DEF");
-//     expect(component.getShortStatName("attack")).toBe("ATK");
-//     expect(component.getShortStatName("random-stat")).toBe("random-stat");
-//   });
+    const rendererSpy = jasmine.createSpyObj("Renderer2", [
+      "listen",
+      "setAttribute",
+    ]);
 
-//   it("should return unique types with fallback slot IDs", () => {
-//     component["pokemon"] = {
-//       types: [
-//         { type: { name: "fire" }, slot: 1 },
-//         { type: { name: "flying" } }, // no slot
-//       ],
-//     } as any;
+    await TestBed.configureTestingModule({
+      imports: [PokemonCardBigComponent, LoadingSpinnerComponent, MatTooltip],
+      providers: [
+        { provide: PokemonService, useValue: pokemonServiceSpy },
+        { provide: Renderer2, useValue: rendererSpy },
+      ],
+    }).compileComponents();
 
-//     const result = component.uniqueTypes;
-//     expect(result.length).toBe(2);
-//     expect(result[0].uniqueSlot).toBe(1);
-//     expect(result[1].uniqueSlot).toBe(2); // fallback
-//   });
-// });
+    pokemonService = TestBed.inject(
+      PokemonService,
+    ) as jasmine.SpyObj<PokemonService>;
+    renderer = TestBed.inject(Renderer2) as jasmine.SpyObj<Renderer2>;
 
-// import { DestroyRef, signal } from "@angular/core";
-// import { TestBed } from "@angular/core/testing";
-// import { of, throwError } from "rxjs";
-// import { PokemonService } from "../../../../../core/services/pokemon/pokemon.service";
-// import { PokemonCardBigComponent } from "./pokemon-card-big.component";
+    // Setup default responses for service methods
+    pokemonService.fetchPokemon.and.returnValue(of(mockPokemon));
+    pokemonService.fetchPokemonSpecies.and.returnValue(of(mockSpecies));
+    pokemonService.fetchEvolutionChain.and.returnValue(of(mockEvolutionChain));
+    pokemonService.getEvolutionChain.and.returnValue(mockEvolutions);
+    pokemonService.getPokemonTypeColors.and.returnValue("#78C850"); // grass color
 
-// class MockPokemonService {
-//   fetchPokemon(id: number) {
-//     return of({ name: "charizard", types: [] });
-//   }
+    // Setup renderer mock
+    renderer.listen.and.returnValue(() => {});
 
-//   fetchPokemonSpecies(id: number) {
-//     return of({
-//       evolution_chain: { url: "https://pokeapi.co/api/v2/evolution-chain/1/" },
-//     });
-//   }
+    fixture = TestBed.createComponent(PokemonCardBigComponent);
+    component = fixture.componentInstance;
 
-//   fetchEvolutionChain(url: string) {
-//     return of({ chain: { evolves_to: [] } });
-//   }
+    // Set the required input signal
+    (component as any).pokemonId = signal(1);
+  });
 
-//   getEvolutionChain(chain: any) {
-//     return ["charmander", "charmeleon", "charizard"];
-//   }
+  it("should create", () => {
+    expect(component).toBeTruthy();
+  });
 
-//   getPokemonTypeColors(type: string) {
-//     return "#000000";
-//   }
-// }
+  it("should load Pokemon details on initialization", fakeAsync(() => {
+    // Arrange - setup already done in beforeEach
 
-// describe("PokemonCardBigComponent", () => {
-//   let component: PokemonCardBigComponent;
-//   let service: PokemonService;
+    // Act
+    fixture.detectChanges(); // Triggers ngOnInit
+    tick(); // Process any pending microtasks
 
-//   beforeEach(() => {
-//     TestBed.configureTestingModule({
-//       providers: [
-//         { provide: PokemonService, useClass: MockPokemonService },
-//         // DestroyRef is required since component uses takeUntilDestroyed
-//         { provide: DestroyRef, useValue: {} },
-//       ],
-//     });
+    // Assert
+    expect(pokemonService.fetchPokemon).toHaveBeenCalledWith(1);
+    expect(pokemonService.fetchPokemonSpecies).toHaveBeenCalledWith(1);
+    expect(pokemonService.fetchEvolutionChain).toHaveBeenCalledWith(
+      mockSpecies.evolution_chain.url,
+    );
+    expect(component.pokemon).toEqual(mockPokemon);
+    expect(component.evolutionChain).toEqual(mockEvolutions);
+    expect(component.isLoading).toBeFalse();
+  }));
 
-//     component = new PokemonCardBigComponent();
-//     service = TestBed.inject(PokemonService);
+  it("should handle error when loading Pokemon details", fakeAsync(() => {
+    // Arrange
+    pokemonService.fetchPokemon.and.returnValue(
+      throwError(() => new Error("Network error")),
+    );
 
-//     component.pokemonId = 6; // mock charizard
-//   });
+    // Act
+    fixture.detectChanges();
+    tick();
 
-//   it("should load full Pokémon details successfully", () => {
-//     component.loadPokemonDetails();
+    // Assert
+    expect(component.error).toBeTruthy();
+    expect(component.isLoading).toBeFalse();
+  }));
 
-//     expect(component.isLoading).toBe(false);
-//     expect(component.pokemon).toEqual(
-//       jasmine.objectContaining({ name: "charizard" }),
-//     );
-//     expect(component.evolutionChain).toEqual([
-//       "charmander",
-//       "charmeleon",
-//       "charizard",
-//     ]);
-//     expect(component.error).toBeNull();
-//   });
+  it("should get correct Pokemon type color", () => {
+    // Arrange
+    fixture.detectChanges();
 
-//   it("should set error message if fetch fails", () => {
-//     spyOn(service, "fetchPokemon").and.returnValue(
-//       throwError(() => new Error("Network error")),
-//     );
+    // Act
+    const color = component.getPokemonTypeColor("grass");
 
-//     component.loadPokemonDetails();
+    // Assert
+    expect(pokemonService.getPokemonTypeColors).toHaveBeenCalledWith("grass");
+    expect(color).toBe("#78C850");
+  });
 
-//     expect(component.isLoading).toBe(false);
-//     expect(component.error).toBe("Failed to load Pokémon details");
-//     expect(component.evolutionChain).toEqual([]);
-//   });
-// });
+  it("should return default color when no type is provided", () => {
+    // Act
+    const color = component.getPokemonTypeColor();
+
+    // Assert
+    expect(color).toBe("#000000");
+  });
+
+  it("should format Pokemon name correctly", () => {
+    // Act
+    const formattedName = component.getPokemonName("charizard-mega-x");
+
+    // Assert
+    expect(formattedName).toBe("Charizard-Mega-X");
+  });
+
+  it("should get short stat names correctly", () => {
+    // Act & Assert
+    expect(component.getShortStatName("hp")).toBe("HP");
+    expect(component.getShortStatName("attack")).toBe("ATK");
+    expect(component.getShortStatName("special-attack")).toBe("S-ATK");
+    expect(component.getShortStatName("unknown-stat")).toBe("unknown-stat");
+  });
+
+  it("should emit closeDetail when overlay is clicked", () => {
+    // Arrange
+    fixture.detectChanges();
+    spyOn(component.closeDetail, "emit");
+    const event = new MouseEvent("click");
+    Object.defineProperty(event, "target", {
+      value: document.createElement("div"),
+    });
+
+    // Act
+    component.handleOverlayClick(event);
+
+    // Assert
+    expect(component.closeDetail.emit).toHaveBeenCalled();
+  });
+
+  it("should not emit closeDetail when clicking inside the card", () => {
+    // Arrange
+    fixture.detectChanges();
+    spyOn(component.closeDetail, "emit");
+
+    // Create a mock event with a target that has a closest method returning a non-null value
+    const mockElement = document.createElement("div");
+    const event = {
+      target: {
+        closest: (selector: string) => mockElement,
+      },
+    } as unknown as MouseEvent;
+
+    // Act
+    component.handleKeyDown = jasmine.createSpy("handleKeyDown");
+    component.handleOverlayClick(event);
+
+    // Assert
+    expect(component.closeDetail.emit).not.toHaveBeenCalled();
+  });
+
+  it("should handle Escape key correctly", () => {
+    // Arrange
+    fixture.detectChanges();
+    spyOn(component.closeDetail, "emit");
+    const event = new KeyboardEvent("keydown", { key: "Escape" });
+
+    // Act
+    component.handleKeyDown(event);
+
+    // Assert
+    expect(component.closeDetail.emit).toHaveBeenCalled();
+  });
+
+  it("should handle ArrowLeft key correctly", () => {
+    // Arrange
+    fixture.detectChanges();
+    spyOn(component.showPrior, "emit");
+    const event = new KeyboardEvent("keydown", { key: "ArrowLeft" });
+    spyOn(event, "preventDefault");
+
+    // Act
+    component.handleKeyDown(event);
+
+    // Assert
+    expect(component.showPrior.emit).toHaveBeenCalled();
+    expect(event.preventDefault).toHaveBeenCalled();
+  });
+
+  it("should handle ArrowRight key correctly", () => {
+    // Arrange
+    fixture.detectChanges();
+    spyOn(component.showNext, "emit");
+    const event = new KeyboardEvent("keydown", { key: "ArrowRight" });
+    spyOn(event, "preventDefault");
+
+    // Act
+    component.handleKeyDown(event);
+
+    // Assert
+    expect(component.showNext.emit).toHaveBeenCalled();
+    expect(event.preventDefault).toHaveBeenCalled();
+  });
+
+  it("should set up container in ngAfterViewInit", () => {
+    // Create a simplified mock
+    const mockContainer = jasmine.createSpyObj("HTMLElement", ["focus"]);
+    const mockElementRef = {
+      nativeElement: {
+        querySelector: jasmine
+          .createSpy("querySelector")
+          .and.returnValue(mockContainer),
+        querySelectorAll: jasmine
+          .createSpy("querySelectorAll")
+          .and.returnValue([]),
+      },
+    };
+
+    // Replace the component's ElementRef with our mock
+    (component as any).elementRef = mockElementRef;
+
+    // Call ngAfterViewInit directly
+    component.ngAfterViewInit();
+
+    // Verify querySelector was called with the right selector
+    expect(mockElementRef.nativeElement.querySelector).toHaveBeenCalledWith(
+      ".detailed-pokemon-card-container",
+    );
+
+    // Verify renderer.setAttribute was called correctly
+    expect(renderer.setAttribute).toHaveBeenCalledWith(
+      mockContainer,
+      "tabindex",
+      "-1",
+    );
+
+    // Check that focus is called (via setTimeout)
+    jasmine.clock().install();
+    jasmine.clock().tick(10);
+    expect(mockContainer.focus).toHaveBeenCalled();
+    jasmine.clock().uninstall();
+  });
+
+  // Test keyboard event handling directly through public methods
+  // Test keyboard event handling directly through public methods
+  it("should handle keyboard navigation correctly", () => {
+    // Setup spies on the output events
+    const closeDetailSpy = spyOn(component.closeDetail, "emit");
+    const showPriorSpy = spyOn(component.showPrior, "emit");
+    const showNextSpy = spyOn(component.showNext, "emit");
+
+    // Test Escape key
+    const escapeEvent = new KeyboardEvent("keydown", { key: "Escape" });
+    component.handleKeyDown(escapeEvent);
+    expect(closeDetailSpy).toHaveBeenCalled();
+
+    // Test ArrowLeft key
+    const leftEvent = {
+      key: "ArrowLeft",
+      preventDefault: jasmine.createSpy("preventDefault"),
+    };
+    component.handleKeyDown(leftEvent as unknown as KeyboardEvent);
+    expect(showPriorSpy).toHaveBeenCalled();
+    expect(leftEvent.preventDefault).toHaveBeenCalled();
+
+    // Test ArrowRight key
+    const rightEvent = {
+      key: "ArrowRight",
+      preventDefault: jasmine.createSpy("preventDefault"),
+    };
+    component.handleKeyDown(rightEvent as unknown as KeyboardEvent);
+    expect(showNextSpy).toHaveBeenCalled();
+    expect(rightEvent.preventDefault).toHaveBeenCalled();
+  });
+
+  // Test for overlay click handling
+  it("should handle overlay clicks correctly", () => {
+    // Setup spy for the output event
+    const closeDetailSpy = spyOn(component.closeDetail, "emit");
+
+    // Test clicking outside the card
+    const mockEvent = {
+      target: {
+        closest: (selector: string) => null,
+      },
+    };
+    component.handleOverlayClick(mockEvent as unknown as MouseEvent);
+    expect(closeDetailSpy).toHaveBeenCalled();
+
+    // Test clicking inside the card
+    const mockEventInside = {
+      target: {
+        closest: (selector: string) => document.createElement("div"),
+      },
+    };
+    // Reset the spy manually since we're using the same spy instance
+    closeDetailSpy.calls.reset();
+    component.handleOverlayClick(mockEventInside as unknown as MouseEvent);
+    expect(closeDetailSpy).not.toHaveBeenCalled();
+  });
+
+  // Since we can't easily test the Tab key trap behavior in isolation,
+  // let's test that the renderer.listen is called with the right parameters
+  it("should set up keyboard event listener", () => {
+    // Create a simplified mock
+    const mockElement = document.createElement("div");
+    const mockFocusable = [
+      document.createElement("button"),
+      document.createElement("button"),
+    ];
+
+    const mockElementRef = {
+      nativeElement: {
+        querySelector: () => mockElement,
+        querySelectorAll: () => mockFocusable,
+      },
+    };
+
+    // Replace the component's ElementRef with our mock
+    (component as any).elementRef = mockElementRef;
+
+    // Reset the renderer spy
+    renderer.listen.calls.reset();
+
+    // Call the method directly (making it protected helped with this)
+    (component as any).setupFocusTrap();
+
+    // Verify renderer.listen was called with the right parameters
+    expect(renderer.listen).toHaveBeenCalledWith(
+      mockElement,
+      "keydown",
+      jasmine.any(Function),
+    );
+  });
+});
