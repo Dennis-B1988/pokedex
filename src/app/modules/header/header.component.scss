@@ -7,10 +7,22 @@ header {
   padding-left: 3.125rem;
   padding-right: 3.125rem;
   box-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
+  position: relative;
 
   img {
     height: 5rem;
   }
+}
+
+.legal-notice {
+  position: absolute;
+  top: 0.25rem;
+  right: 1rem;
+  font-size: 0.75rem;
+  text-decoration: none;
+  color: #666;
+  font-weight: 500;
+  cursor: pointer;
 }
 
 .header-container {
@@ -34,6 +46,10 @@ header {
 .small-screen-content {
   display: none;
   gap: 1.25rem;
+}
+
+.logo {
+  cursor: pointer;
 }
 
 .logo-small {

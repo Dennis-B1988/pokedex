@@ -1,0 +1,20 @@
+@import "../../../styles/mixins";
+
+:host {
+  @include flex(column, center, center);
+  width: 100%;
+  height: 100%;
+}
+
+h1,
+h2 {
+  padding-bottom: 1rem;
+}
+
+.legal-notice {
+  padding-bottom: 1rem;
+}
+
+.contact {
+  padding-bottom: 1rem;
+}

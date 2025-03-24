@@ -7,7 +7,7 @@ import {
   provideHttpClientTesting,
 } from "@angular/common/http/testing";
 import { TestBed, fakeAsync, tick } from "@angular/core/testing";
-import { environment } from "../../../../environment/environment";
+import { environment } from "../../../../environment/environment.prod";
 import { Pokemon } from "../../models/pokemon-details.model";
 import { PokemonService } from "./pokemon.service";
 

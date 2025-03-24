@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
-  pokemonURL: "YOUR_POKEMON_API_URL",
-  pokemonSpeciesURL: "YOUR_POKEMON_SPECIES_API_URL",
-  pokemonImageURL: "YOUR_POKEMON_IMAGE_API_URL",
+  pokemonURL: "https://pokeapi.co/api/v2/pokemon",
+  pokemonSpeciesURL: "https://pokeapi.co/api/v2/pokemon-species",
+  pokemonImageURL:
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/",
 };

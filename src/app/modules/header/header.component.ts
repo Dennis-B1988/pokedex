@@ -2,14 +2,14 @@ import { Component, inject } from "@angular/core";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectChange, MatSelectModule } from "@angular/material/select";
-import { Router } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { RegionKey } from "../../core/models/pokemon-details.model";
 import { PokemonSearchService } from "../../core/services/pokemon-search/pokemon-search.service";
 import { PokemonService } from "../../core/services/pokemon/pokemon.service";
 
 @Component({
   selector: "app-header",
-  imports: [MatSelectModule, MatFormFieldModule, MatInputModule],
+  imports: [MatSelectModule, MatFormFieldModule, MatInputModule, RouterLink],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.scss",
 })

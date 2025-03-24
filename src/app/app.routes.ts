@@ -20,4 +20,11 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: "Impressum",
+    loadComponent: () =>
+      import("./modules/main-page/legal-notice/legal-notice.component").then(
+        (m) => m.LegalNoticeComponent,
+      ),
+  },
 ];

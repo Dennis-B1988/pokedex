@@ -2,13 +2,26 @@
   [style]="menuOpen && windowWidth < 680 ? 'height: 15.625rem' : ''"
   role="banner"
 >
+  <span
+    [routerLink]="['/Impressum']"
+    routerLinkActive="router-link-active"
+    class="legal-notice"
+    >Impressum</span
+  >
+
   <div class="header-container">
     <div class="logo-container">
-      <img class="logo-big" src="assets/img/logo.png" alt="Pokedex Logo" />
       <img
-        class="logo-small"
+        class="logo-big logo"
+        src="assets/img/logo.png"
+        alt="Pokedex Logo"
+        [routerLink]="['/']"
+      />
+      <img
+        class="logo-small logo"
         src="assets/img/logo-small.png"
         alt="Pokedex Logo"
+        [routerLink]="['/']"
       />
     </div>
 

@@ -8,7 +8,7 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { catchError, finalize, forkJoin, Observable, of } from "rxjs";
-import { environment } from "../../../../environment/environment";
+import { environment } from "../../../../environment/environment.prod";
 import {
   Pokemon,
   pokemonTypeColors,
