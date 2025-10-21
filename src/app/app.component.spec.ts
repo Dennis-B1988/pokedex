@@ -1,7 +1,7 @@
 import { provideHttpClient } from "@angular/common/http";
 import { Component, signal } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { RouterOutlet } from "@angular/router";
+import { ActivatedRoute, RouterOutlet } from "@angular/router";
 import { AppComponent } from "./app.component";
 import { PokemonService } from "./core/services/pokemon/pokemon.service"; // Update with correct path
 
@@ -82,6 +82,7 @@ describe("AppComponent", () => {
       providers: [
         provideHttpClient(),
         { provide: PokemonService, useValue: mockPokemonService },
+        { provide: ActivatedRoute, useValue: {} },
       ],
     }).compileComponents();
 

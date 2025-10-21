@@ -7,7 +7,7 @@ import {
 } from "@angular/core/testing";
 import { MatSelectChange } from "@angular/material/select";
 import { provideNoopAnimations } from "@angular/platform-browser/animations";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { RegionKey } from "../../core/models/pokemon-details.model";
 import { PokemonSearchService } from "../../core/services/pokemon-search/pokemon-search.service";
 import { PokemonService } from "../../core/services/pokemon/pokemon.service";
@@ -60,6 +60,7 @@ describe("HeaderComponent", () => {
         { provide: PokemonService, useValue: mockPokemonService },
         { provide: PokemonSearchService, useValue: mockPokemonSearchService },
         { provide: Router, useValue: mockRouter },
+        { provide: ActivatedRoute, useValue: {} },
         provideNoopAnimations(),
       ],
     }).compileComponents();
