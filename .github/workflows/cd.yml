@@ -16,8 +16,14 @@ jobs:
         with:
           node-version: 20
 
-      - run: npm ci
-      - run: npm run build -- --configuration=production
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build -- --configuration=production
+
+      - name: Copy .htaccess
+        run: cp .htaccess dist/pokedex/browser/.htaccess
 
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
@@ -32,4 +38,3 @@ jobs:
             **/.git*
             **/.github*
             **/node_modules/**
-            **/.htaccess
