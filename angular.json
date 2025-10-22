@@ -25,7 +25,7 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              ".htaccess",
+              "./.htaccess",
               {
                 "glob": "**/*",
                 "input": "src/assets",
@@ -85,7 +85,7 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              ".htaccess",
+              "./.htaccess",
               {
                 "glob": "**/*",
                 "input": "src/assets",
