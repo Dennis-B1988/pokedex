@@ -25,3 +25,6 @@ jobs:
 
       - name: Run Tests
         run: npm test -- --browsers=ChromeHeadless --watch=false
+
+      - name: Build
+        run: npm run build -- --configuration=production
