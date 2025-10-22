@@ -1,16 +1,15 @@
 name: cd
 
 on:
-  workflow_run:
-    workflows: ["ci"]
-    types:
-      - completed
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/main')
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
