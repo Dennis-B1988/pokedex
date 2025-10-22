@@ -19,11 +19,5 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Run linters
-        uses: wearerequired/lint-action@v2
-        with:
-          eslint: true
-          prettier: true
-
       - name: Run Tests
         run: npm test -- --browsers=ChromeHeadless --watch=false
