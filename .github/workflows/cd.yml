@@ -12,11 +12,14 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v4
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
         with:
-          name: dist-build
-          path: dist/
+          node-version: 20
+
+      - run: npm ci
+      - run: npm run build -- --configuration=production
 
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
@@ -31,4 +34,3 @@ jobs:
             **/.git*
             **/.github*
             **/node_modules/**
-            **/.htaccess
